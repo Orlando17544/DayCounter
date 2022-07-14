@@ -1,250 +1,249 @@
-{name: 'Afganistán', code: 'AF'},
-		{name: 'Åland, Islas', code: 'AX'},
-		{name: 'Albania', code: 'AL'},
-		{name: 'Alemania', code: 'DE'},
-		{name: 'Andorra', code: 'AD'},
-		{name: 'Angola', code: 'AO'},
-		{name: 'Anguila', code: 'AI'},
-		{name: 'Antártida', code: 'AQ'},
-		{name: 'Antigua y Barbuda', code: 'AG'},
-		{name: 'Arabia Saudita', code: 'SA'},
-		{name: 'Argelia', code: 'DZ'},
-		{name: 'Argentina', code: 'AR'},
-		{name: 'Armenia', code: 'AM'},
-		{name: 'Aruba', code: 'AW'},
-		{name: 'Australia', code: 'AU'},
-		{name: 'Austria', code: 'AT'},
-		{name: 'Azerbaiyán', code: 'AZ'},
-		{name: 'Bahamas ', code: 'BS'},
-		{name: 'Bangladés', code: 'BD'},
-		{name: 'Barbados', code: 'BB'},
-		{name: 'Baréin', code: 'BH'},
-		{name: 'Belarús', code: 'BY'},
-		{name: 'Bélgica', code: 'BE'},
-		{name: 'Belice', code: 'BZ'},
-		{name: 'Benín', code: 'BJ'},
-		{name: 'Bermudas', code: 'BM'},
-		{name: 'Bhután', code: 'BT'},
-		{name: 'Bolivia ', code: 'BO'},
-		{name: 'Bonaire, San Eustaquio y Saba', code: 'BQ'},
-		{name: 'Bosnia y Herzegovina', code: 'BA'},
-		{name: 'Botsuana', code: 'BW'},
-		{name: 'Bouvet, Isla', code: 'BV'},
-		{name: 'Brasil', code: 'BR'},
-		{name: 'Brunéi Darussalam', code: 'BN'},
-		{name: 'Bulgaria', code: 'BG'},
-		{name: 'Burkina Faso', code: 'BF'},
-		{name: 'Burundi', code: 'BI'},
-		{name: 'Cabo Verde', code: 'CV'},
-		{name: 'Caimán,  Islas', code: 'KY'},
-		{name: 'Camboya', code: 'KH'},
-		{name: 'Camerún', code: 'CM'},
-		{name: 'Canadá', code: 'CA'},
-		{name: 'Catar', code: 'QA'},
-		{name: 'Chad', code: 'TD'},
-		{name: 'Chequia', code: 'CZ'},
-		{name: 'Chile', code: 'CL'},
-		{name: 'China', code: 'CN'},
-		{name: 'Chipre', code: 'CY'},
-		{name: 'Cocos / Keeling,  Islas', code: 'CC'},
-		{name: 'Colombia', code: 'CO'},
-		{name: 'Comoras ', code: 'KM'},
-		{name: 'Congo ', code: 'CG'},
-		{name: 'Cook,  Islas', code: 'CK'},
-		{name: 'Corea ', code: 'KR'},
-		{name: 'Costa Rica', code: 'CR'},
-		{name: 'Côte d\'Ivoire', code: 'CI'},
-		{name: 'Croacia', code: 'HR'},
-		{name: 'Cuba', code: 'CU'},
-		{name: 'Curaçao', code: 'CW'},
-		{name: 'Dinamarca', code: 'DK'},
-		{name: 'Dominica', code: 'DM'},
-		{name: 'Dominicana,  República', code: 'DO'},
-		{name: 'Ecuador', code: 'EC'},
-		{name: 'Egipto', code: 'EG'},
-		{name: 'El Salvador', code: 'SV'},
-		{name: 'Emiratos Árabes Unidos ', code: 'AE'},
-		{name: 'Eritrea', code: 'ER'},
-		{name: 'Eslovaquia', code: 'SK'},
-		{name: 'Eslovenia', code: 'SI'},
-		{name: 'España', code: 'ES'},
-		{name: 'Estados Unidos de América ', code: 'US'},
-		{name: 'Estonia', code: 'EE'},
-		{name: 'Etiopía', code: 'ET'},
-		{name: 'Feroe,  Islas', code: 'FO'},
-		{name: 'Filipinas ', code: 'PH'},
-		{name: 'Finlandia', code: 'FI'},
-		{name: 'Fiyi', code: 'FJ'},
-		{name: 'Francia', code: 'FR'},
-		{name: 'Gabón', code: 'GA'},
-		{name: 'Gambia ', code: 'GM'},
-		{name: 'Georgia del Sur  y las Islas Sandwich del Sur', code: 'GS'},
-		{name: 'Georgia', code: 'GE'},
-		{name: 'Ghana', code: 'GH'},
-		{name: 'Gibraltar', code: 'GI'},
-		{name: 'Granada', code: 'GD'},
-		{name: 'Grecia', code: 'GR'},
-		{name: 'Groenlandia', code: 'GL'},
-		{name: 'Guadeloupe', code: 'GP'},
-		{name: 'Guam', code: 'GU'},
-		{name: 'Guatemala', code: 'GT'},
-		{name: 'Guayana Francesa', code: 'GF'},
-		{name: 'Guernsey', code: 'GG'},
-		{name: 'Guinea Bissau', code: 'GW'},
-		{name: 'Guinea Ecuatorial', code: 'GQ'},
-		{name: 'Guinea', code: 'GN'},
-		{name: 'Guyana', code: 'GY'},
-		{name: 'Haití', code: 'HT'},
-		{name: 'Heard  e Islas McDonald', code: 'HM'},
-		{name: 'Honduras', code: 'HN'},
-		{name: 'Hong Kong', code: 'HK'},
-		{name: 'Hungría', code: 'HU'},
-		{name: 'India', code: 'IN'},
-		{name: 'Indonesia', code: 'ID'},
-		{name: 'Irak', code: 'IQ'},
-		{name: 'Irán ', code: 'IR'},
-		{name: 'Irlanda', code: 'IE'},
-		{name: 'Isla de Man', code: 'IM'},
-		{name: 'Islandia', code: 'IS'},
-		{name: 'Islas Ultramarinas Menores de los Estados Unidos ', code: 'UM'},
-		{name: 'Israel', code: 'IL'},
-		{name: 'Italia', code: 'IT'},
-		{name: 'Jamaica', code: 'JM'},
-		{name: 'Japón', code: 'JP'},
-		{name: 'Jersey', code: 'JE'},
-		{name: 'Jordania', code: 'JO'},
-		{name: 'Kazajistán', code: 'KZ'},
-		{name: 'Kenia', code: 'KE'},
-		{name: 'Kirguistán', code: 'KG'},
-		{name: 'Kiribati', code: 'KI'},
-		{name: 'Kuwait', code: 'KW'},
-		{name: 'Lao,  República Democrática Popular', code: 'LA'},
-		{name: 'Lesoto', code: 'LS'},
-		{name: 'Letonia', code: 'LV'},
-		{name: 'Líbano', code: 'LB'},
-		{name: 'Liberia', code: 'LR'},
-		{name: 'Libia', code: 'LY'},
-		{name: 'Liechtenstein', code: 'LI'},
-		{name: 'Lituania', code: 'LT'},
-		{name: 'Luxemburgo', code: 'LU'},
-		{name: 'Macao', code: 'MO'},
-		{name: 'Macedonia del Norte', code: 'MK'},
-		{name: 'Madagascar', code: 'MG'},
-		{name: 'Malasia', code: 'MY'},
-		{name: 'Malawi', code: 'MW'},
-		{name: 'Maldivas', code: 'MV'},
-		{name: 'Malí', code: 'ML'},
-		{name: 'Malta', code: 'MT'},
-		{name: 'Malvinas [Falkland],  Islas', code: 'FK'},
-		{name: 'Marianas del Norte,  Islas', code: 'MP'},
-		{name: 'Marruecos', code: 'MA'},
-		{name: 'Marshall,  Islas', code: 'MH'},
-		{name: 'Martinique', code: 'MQ'},
-		{name: 'Mauricio', code: 'MU'},
-		{name: 'Mauritania', code: 'MR'},
-		{name: 'Mayotte', code: 'YT'},
-		{name: 'México', code: 'MX'},
-		{name: 'Micronesia ', code: 'FM'},
-		{name: 'Moldavia ', code: 'MD'},
-		{name: 'Mónaco', code: 'MC'},
-		{name: 'Mongolia', code: 'MN'},
-		{name: 'Montenegro', code: 'ME'},
-		{name: 'Montserrat', code: 'MS'},
-		{name: 'Mozambique', code: 'MZ'},
-		{name: 'Myanmar', code: 'MM'},
-		{name: 'Namibia', code: 'NA'},
-		{name: 'Nauru', code: 'NR'},
-		{name: 'Navidad, Isla de', code: 'CX'},
-		{name: 'Nepal', code: 'NP'},
-		{name: 'Nicaragua', code: 'NI'},
-		{name: 'Níger ', code: 'NE'},
-		{name: 'Nigeria', code: 'NG'},
-		{name: 'Niue', code: 'NU'},
-		{name: 'Norfolk, Isla', code: 'NF'},
-		{name: 'Noruega', code: 'NO'},
-		{name: 'Nueva Caledonia', code: 'NC'},
-		{name: 'Nueva Zelandia', code: 'NZ'},
-		{name: 'Omán', code: 'OM'},
-		{name: 'Países Bajos ', code: 'NL'},
-		{name: 'Pakistán', code: 'PK'},
-		{name: 'Palaos', code: 'PW'},
-		{name: 'Palestina, Estado de', code: 'PS'},
-		{name: 'Panamá', code: 'PA'},
-		{name: 'Papúa Nueva Guinea', code: 'PG'},
-		{name: 'Paraguay', code: 'PY'},
-		{name: 'Perú', code: 'PE'},
-		{name: 'Pitcairn', code: 'PN'},
-		{name: 'Polinesia Francesa', code: 'PF'},
-		{name: 'Polonia', code: 'PL'},
-		{name: 'Portugal', code: 'PT'},
-		{name: 'Puerto Rico', code: 'PR'},
-		{name: 'Reino Unido de Gran Bretaña e Irlanda del Norte ', code: 'GB'},
-		{name: 'República Árabe Siria', code: 'SY'},
-		{name: 'República Centroafricana ', code: 'CF'},
-		{name: 'República Democrática del Congo', code: 'CD'},
-		{name: 'República Popular Democrática de Corea', code: 'KP'},
-		{name: 'Reunión', code: 'RE'},
-		{name: 'Ruanda', code: 'RW'},
-		{name: 'Rumania', code: 'RO'},
-		{name: 'Rusia,  Federación de', code: 'RU'},
-		{name: 'Sahara Occidental', code: 'EH'},
-		{name: 'Saint Barthélemy', code: 'BL'},
-		{name: 'Saint Martin ', code: 'MF'},
-		{name: 'Salomón, Islas', code: 'SB'},
-		{name: 'Samoa Americana', code: 'AS'},
-		{name: 'Samoa', code: 'WS'},
-		{name: 'San Cristóbal y Nieves', code: 'KN'},
-		{name: 'San Marino', code: 'SM'},
-		{name: 'San Pedro y Miquelón', code: 'PM'},
-		{name: 'San Vicente y las Granadinas', code: 'VC'},
-		{name: 'Santa Helena, Ascensión y Tristán de Acuña', code: 'SH'},
-		{name: 'Santa Lucía', code: 'LC'},
-		{name: 'Santa Sede ', code: 'VA'},
-		{name: 'Santo Tomé y Príncipe', code: 'ST'},
-		{name: 'Senegal', code: 'SN'},
-		{name: 'Serbia', code: 'RS'},
-		{name: 'Seychelles', code: 'SC'},
-		{name: 'Sierra leona', code: 'SL'},
-		{name: 'Singapur', code: 'SG'},
-		{name: 'Sint Maarten ', code: 'SX'},
-		{name: 'Somalia', code: 'SO'},
-		{name: 'Sri Lanka', code: 'LK'},
-		{name: 'Suazilandia', code: 'SZ'},
-		{name: 'Sudáfrica', code: 'ZA'},
-		{name: 'Sudán del Sur', code: 'SS'},
-		{name: 'Sudán ', code: 'SD'},
-		{name: 'Suecia', code: 'SE'},
-		{name: 'Suiza', code: 'CH'},
-		{name: 'Suriname', code: 'SR'},
-		{name: 'Svalbard y Jan Mayen', code: 'SJ'},
-		{name: 'Tailandia', code: 'TH'},
-		{name: 'Taiwán ', code: 'TW'},
-		{name: 'Tanzania, República Unida de', code: 'TZ'},
-		{name: 'Tayikistán', code: 'TJ'},
-		{name: 'Territorio Británico del Océano Índico ', code: 'IO'},
-		{name: 'Tierras Australes Francesas ', code: 'TF'},
-		{name: 'Timor-Leste', code: 'TL'},
-		{name: 'Togo', code: 'TG'},
-		{name: 'Tokelau', code: 'TK'},
-		{name: 'Tonga', code: 'TO'},
-		{name: 'Trinidad y Tobago', code: 'TT'},
-		{name: 'Túnez', code: 'TN'},
-		{name: 'Turcas y Caicos,  Islas', code: 'TC'},
-		{name: 'Turkmenistán', code: 'TM'},
-		{name: 'Turquía', code: 'TR'},
-		{name: 'Tuvalu', code: 'TV'},
-		{name: 'Ucrania', code: 'UA'},
-		{name: 'Uganda', code: 'UG'},
-		{name: 'Uruguay', code: 'UY'},
-		{name: 'Uzbekistán', code: 'UZ'},
-		{name: 'Vanuatu', code: 'VU'},
-		{name: 'Venezuela ', code: 'VE'},
-		{name: 'Viet Nam', code: 'VN'},
-		{name: 'Vírgenes británicas, Islas', code: 'VG'},
-		{name: 'Vírgenes de los Estados Unidos, Islas', code: 'VI'},
-		{name: 'Wallis y Futuna', code: 'WF'},
-		{name: 'Yemen', code: 'YE'},
-		{name: 'Yibuti', code: 'DJ'},
-		{name: 'Zambia', code: 'ZM'},
-		{name: 'Zimbabue', code: 'ZW'}
-
+storage.set('AF', JSON.stringify({days: '0', maximumDays: '0'}));
+			storage.set('AX', JSON.stringify({days: '0', maximumDays: '0'}));
+			storage.set('AL', JSON.stringify({days: '0', maximumDays: '0'}));
+			storage.set('DE', JSON.stringify({days: '0', maximumDays: '0'}));
+			storage.set('AD', JSON.stringify({days: '0', maximumDays: '0'}));
+			storage.set('AO', JSON.stringify({days: '0', maximumDays: '0'}));
+			storage.set('AI', JSON.stringify({days: '0', maximumDays: '0'}));
+			storage.set('AQ', JSON.stringify({days: '0', maximumDays: '0'}));
+			storage.set('AG', JSON.stringify({days: '0', maximumDays: '0'}));
+			storage.set('SA', JSON.stringify({days: '0', maximumDays: '0'}));
+			storage.set('DZ', JSON.stringify({days: '0', maximumDays: '0'}));
+			storage.set('AR', JSON.stringify({days: '0', maximumDays: '0'}));
+			storage.set('AM', JSON.stringify({days: '0', maximumDays: '0'}));
+			storage.set('AW', JSON.stringify({days: '0', maximumDays: '0'}));
+			storage.set('AU', JSON.stringify({days: '0', maximumDays: '0'}));
+			storage.set('AT', JSON.stringify({days: '0', maximumDays: '0'}));
+			storage.set('AZ', JSON.stringify({days: '0', maximumDays: '0'}));
+			storage.set('BS', JSON.stringify({days: '0', maximumDays: '0'}));
+			storage.set('BD', JSON.stringify({days: '0', maximumDays: '0'}));
+			storage.set('BB', JSON.stringify({days: '0', maximumDays: '0'}));
+			storage.set('BH', JSON.stringify({days: '0', maximumDays: '0'}));
+			storage.set('BY', JSON.stringify({days: '0', maximumDays: '0'}));
+			storage.set('BE', JSON.stringify({days: '0', maximumDays: '0'}));
+			storage.set('BZ', JSON.stringify({days: '0', maximumDays: '0'}));
+			storage.set('BJ', JSON.stringify({days: '0', maximumDays: '0'}));
+			storage.set('BM', JSON.stringify({days: '0', maximumDays: '0'}));
+			storage.set('BT', JSON.stringify({days: '0', maximumDays: '0'}));
+			storage.set('BO', JSON.stringify({days: '0', maximumDays: '0'}));
+			storage.set('BQ', JSON.stringify({days: '0', maximumDays: '0'}));
+			storage.set('BA', JSON.stringify({days: '0', maximumDays: '0'}));
+			storage.set('BW', JSON.stringify({days: '0', maximumDays: '0'}));
+			storage.set('BV', JSON.stringify({days: '0', maximumDays: '0'}));
+			storage.set('BR', JSON.stringify({days: '0', maximumDays: '0'}));
+			storage.set('BN', JSON.stringify({days: '0', maximumDays: '0'}));
+			storage.set('BG', JSON.stringify({days: '0', maximumDays: '0'}));
+			storage.set('BF', JSON.stringify({days: '0', maximumDays: '0'}));
+			storage.set('BI', JSON.stringify({days: '0', maximumDays: '0'}));
+			storage.set('CV', JSON.stringify({days: '0', maximumDays: '0'}));
+			storage.set('KY', JSON.stringify({days: '0', maximumDays: '0'}));
+			storage.set('KH', JSON.stringify({days: '0', maximumDays: '0'}));
+			storage.set('CM', JSON.stringify({days: '0', maximumDays: '0'}));
+			storage.set('CA', JSON.stringify({days: '0', maximumDays: '0'}));
+			storage.set('QA', JSON.stringify({days: '0', maximumDays: '0'}));
+			storage.set('TD', JSON.stringify({days: '0', maximumDays: '0'}));
+			storage.set('CZ', JSON.stringify({days: '0', maximumDays: '0'}));
+			storage.set('CL', JSON.stringify({days: '0', maximumDays: '0'}));
+			storage.set('CN', JSON.stringify({days: '0', maximumDays: '0'}));
+			storage.set('CY', JSON.stringify({days: '0', maximumDays: '0'}));
+			storage.set('CC', JSON.stringify({days: '0', maximumDays: '0'}));
+			storage.set('CO', JSON.stringify({days: '0', maximumDays: '0'}));
+			storage.set('KM', JSON.stringify({days: '0', maximumDays: '0'}));
+			storage.set('CG', JSON.stringify({days: '0', maximumDays: '0'}));
+			storage.set('CK', JSON.stringify({days: '0', maximumDays: '0'}));
+			storage.set('KR', JSON.stringify({days: '0', maximumDays: '0'}));
+			storage.set('CR', JSON.stringify({days: '0', maximumDays: '0'}));
+			storage.set('CI', JSON.stringify({days: '0', maximumDays: '0'}));
+			storage.set('HR', JSON.stringify({days: '0', maximumDays: '0'}));
+			storage.set('CU', JSON.stringify({days: '0', maximumDays: '0'}));
+			storage.set('CW', JSON.stringify({days: '0', maximumDays: '0'}));
+			storage.set('DK', JSON.stringify({days: '0', maximumDays: '0'}));
+			storage.set('DM', JSON.stringify({days: '0', maximumDays: '0'}));
+			storage.set('DO', JSON.stringify({days: '0', maximumDays: '0'}));
+			storage.set('EC', JSON.stringify({days: '0', maximumDays: '0'}));
+			storage.set('EG', JSON.stringify({days: '0', maximumDays: '0'}));
+			storage.set('SV', JSON.stringify({days: '0', maximumDays: '0'}));
+			storage.set('AE', JSON.stringify({days: '0', maximumDays: '0'}));
+			storage.set('ER', JSON.stringify({days: '0', maximumDays: '0'}));
+			storage.set('SK', JSON.stringify({days: '0', maximumDays: '0'}));
+			storage.set('SI', JSON.stringify({days: '0', maximumDays: '0'}));
+			storage.set('ES', JSON.stringify({days: '0', maximumDays: '0'}));
+			storage.set('US', JSON.stringify({days: '0', maximumDays: '0'}));
+			storage.set('EE', JSON.stringify({days: '0', maximumDays: '0'}));
+			storage.set('ET', JSON.stringify({days: '0', maximumDays: '0'}));
+			storage.set('FO', JSON.stringify({days: '0', maximumDays: '0'}));
+			storage.set('PH', JSON.stringify({days: '0', maximumDays: '0'}));
+			storage.set('FI', JSON.stringify({days: '0', maximumDays: '0'}));
+			storage.set('FJ', JSON.stringify({days: '0', maximumDays: '0'}));
+			storage.set('FR', JSON.stringify({days: '0', maximumDays: '0'}));
+			storage.set('GA', JSON.stringify({days: '0', maximumDays: '0'}));
+			storage.set('GM', JSON.stringify({days: '0', maximumDays: '0'}));
+			storage.set('GS', JSON.stringify({days: '0', maximumDays: '0'}));
+			storage.set('GE', JSON.stringify({days: '0', maximumDays: '0'}));
+			storage.set('GH', JSON.stringify({days: '0', maximumDays: '0'}));
+			storage.set('GI', JSON.stringify({days: '0', maximumDays: '0'}));
+			storage.set('GD', JSON.stringify({days: '0', maximumDays: '0'}));
+			storage.set('GR', JSON.stringify({days: '0', maximumDays: '0'}));
+			storage.set('GL', JSON.stringify({days: '0', maximumDays: '0'}));
+			storage.set('GP', JSON.stringify({days: '0', maximumDays: '0'}));
+			storage.set('GU', JSON.stringify({days: '0', maximumDays: '0'}));
+			storage.set('GT', JSON.stringify({days: '0', maximumDays: '0'}));
+			storage.set('GF', JSON.stringify({days: '0', maximumDays: '0'}));
+			storage.set('GG', JSON.stringify({days: '0', maximumDays: '0'}));
+			storage.set('GW', JSON.stringify({days: '0', maximumDays: '0'}));
+			storage.set('GQ', JSON.stringify({days: '0', maximumDays: '0'}));
+			storage.set('GN', JSON.stringify({days: '0', maximumDays: '0'}));
+			storage.set('GY', JSON.stringify({days: '0', maximumDays: '0'}));
+			storage.set('HT', JSON.stringify({days: '0', maximumDays: '0'}));
+			storage.set('HM', JSON.stringify({days: '0', maximumDays: '0'}));
+			storage.set('HN', JSON.stringify({days: '0', maximumDays: '0'}));
+			storage.set('HK', JSON.stringify({days: '0', maximumDays: '0'}));
+			storage.set('HU', JSON.stringify({days: '0', maximumDays: '0'}));
+			storage.set('IN', JSON.stringify({days: '0', maximumDays: '0'}));
+			storage.set('ID', JSON.stringify({days: '0', maximumDays: '0'}));
+			storage.set('IQ', JSON.stringify({days: '0', maximumDays: '0'}));
+			storage.set('IR', JSON.stringify({days: '0', maximumDays: '0'}));
+			storage.set('IE', JSON.stringify({days: '0', maximumDays: '0'}));
+			storage.set('IM', JSON.stringify({days: '0', maximumDays: '0'}));
+			storage.set('IS', JSON.stringify({days: '0', maximumDays: '0'}));
+			storage.set('UM', JSON.stringify({days: '0', maximumDays: '0'}));
+			storage.set('IL', JSON.stringify({days: '0', maximumDays: '0'}));
+			storage.set('IT', JSON.stringify({days: '0', maximumDays: '0'}));
+			storage.set('JM', JSON.stringify({days: '0', maximumDays: '0'}));
+			storage.set('JP', JSON.stringify({days: '0', maximumDays: '0'}));
+			storage.set('JE', JSON.stringify({days: '0', maximumDays: '0'}));
+			storage.set('JO', JSON.stringify({days: '0', maximumDays: '0'}));
+			storage.set('KZ', JSON.stringify({days: '0', maximumDays: '0'}));
+			storage.set('KE', JSON.stringify({days: '0', maximumDays: '0'}));
+			storage.set('KG', JSON.stringify({days: '0', maximumDays: '0'}));
+			storage.set('KI', JSON.stringify({days: '0', maximumDays: '0'}));
+			storage.set('KW', JSON.stringify({days: '0', maximumDays: '0'}));
+			storage.set('LA', JSON.stringify({days: '0', maximumDays: '0'}));
+			storage.set('LS', JSON.stringify({days: '0', maximumDays: '0'}));
+			storage.set('LV', JSON.stringify({days: '0', maximumDays: '0'}));
+			storage.set('LB', JSON.stringify({days: '0', maximumDays: '0'}));
+			storage.set('LR', JSON.stringify({days: '0', maximumDays: '0'}));
+			storage.set('LY', JSON.stringify({days: '0', maximumDays: '0'}));
+			storage.set('LI', JSON.stringify({days: '0', maximumDays: '0'}));
+			storage.set('LT', JSON.stringify({days: '0', maximumDays: '0'}));
+			storage.set('LU', JSON.stringify({days: '0', maximumDays: '0'}));
+			storage.set('MO', JSON.stringify({days: '0', maximumDays: '0'}));
+			storage.set('MK', JSON.stringify({days: '0', maximumDays: '0'}));
+			storage.set('MG', JSON.stringify({days: '0', maximumDays: '0'}));
+			storage.set('MY', JSON.stringify({days: '0', maximumDays: '0'}));
+			storage.set('MW', JSON.stringify({days: '0', maximumDays: '0'}));
+			storage.set('MV', JSON.stringify({days: '0', maximumDays: '0'}));
+			storage.set('ML', JSON.stringify({days: '0', maximumDays: '0'}));
+			storage.set('MT', JSON.stringify({days: '0', maximumDays: '0'}));
+			storage.set('FK', JSON.stringify({days: '0', maximumDays: '0'}));
+			storage.set('MP', JSON.stringify({days: '0', maximumDays: '0'}));
+			storage.set('MA', JSON.stringify({days: '0', maximumDays: '0'}));
+			storage.set('MH', JSON.stringify({days: '0', maximumDays: '0'}));
+			storage.set('MQ', JSON.stringify({days: '0', maximumDays: '0'}));
+			storage.set('MU', JSON.stringify({days: '0', maximumDays: '0'}));
+			storage.set('MR', JSON.stringify({days: '0', maximumDays: '0'}));
+			storage.set('YT', JSON.stringify({days: '0', maximumDays: '0'}));
+			storage.set('MX', JSON.stringify({days: '0', maximumDays: '0'}));
+			storage.set('FM', JSON.stringify({days: '0', maximumDays: '0'}));
+			storage.set('MD', JSON.stringify({days: '0', maximumDays: '0'}));
+			storage.set('MC', JSON.stringify({days: '0', maximumDays: '0'}));
+			storage.set('MN', JSON.stringify({days: '0', maximumDays: '0'}));
+			storage.set('ME', JSON.stringify({days: '0', maximumDays: '0'}));
+			storage.set('MS', JSON.stringify({days: '0', maximumDays: '0'}));
+			storage.set('MZ', JSON.stringify({days: '0', maximumDays: '0'}));
+			storage.set('MM', JSON.stringify({days: '0', maximumDays: '0'}));
+			storage.set('NA', JSON.stringify({days: '0', maximumDays: '0'}));
+			storage.set('NR', JSON.stringify({days: '0', maximumDays: '0'}));
+			storage.set('CX', JSON.stringify({days: '0', maximumDays: '0'}));
+			storage.set('NP', JSON.stringify({days: '0', maximumDays: '0'}));
+			storage.set('NI', JSON.stringify({days: '0', maximumDays: '0'}));
+			storage.set('NE', JSON.stringify({days: '0', maximumDays: '0'}));
+			storage.set('NG', JSON.stringify({days: '0', maximumDays: '0'}));
+			storage.set('NU', JSON.stringify({days: '0', maximumDays: '0'}));
+			storage.set('NF', JSON.stringify({days: '0', maximumDays: '0'}));
+			storage.set('NO', JSON.stringify({days: '0', maximumDays: '0'}));
+			storage.set('NC', JSON.stringify({days: '0', maximumDays: '0'}));
+			storage.set('NZ', JSON.stringify({days: '0', maximumDays: '0'}));
+			storage.set('OM', JSON.stringify({days: '0', maximumDays: '0'}));
+			storage.set('NL', JSON.stringify({days: '0', maximumDays: '0'}));
+			storage.set('PK', JSON.stringify({days: '0', maximumDays: '0'}));
+			storage.set('PW', JSON.stringify({days: '0', maximumDays: '0'}));
+			storage.set('PS', JSON.stringify({days: '0', maximumDays: '0'}));
+			storage.set('PA', JSON.stringify({days: '0', maximumDays: '0'}));
+			storage.set('PG', JSON.stringify({days: '0', maximumDays: '0'}));
+			storage.set('PY', JSON.stringify({days: '0', maximumDays: '0'}));
+			storage.set('PE', JSON.stringify({days: '0', maximumDays: '0'}));
+			storage.set('PN', JSON.stringify({days: '0', maximumDays: '0'}));
+			storage.set('PF', JSON.stringify({days: '0', maximumDays: '0'}));
+			storage.set('PL', JSON.stringify({days: '0', maximumDays: '0'}));
+			storage.set('PT', JSON.stringify({days: '0', maximumDays: '0'}));
+			storage.set('PR', JSON.stringify({days: '0', maximumDays: '0'}));
+			storage.set('GB', JSON.stringify({days: '0', maximumDays: '0'}));
+			storage.set('SY', JSON.stringify({days: '0', maximumDays: '0'}));
+			storage.set('CF', JSON.stringify({days: '0', maximumDays: '0'}));
+			storage.set('CD', JSON.stringify({days: '0', maximumDays: '0'}));
+			storage.set('KP', JSON.stringify({days: '0', maximumDays: '0'}));
+			storage.set('RE', JSON.stringify({days: '0', maximumDays: '0'}));
+			storage.set('RW', JSON.stringify({days: '0', maximumDays: '0'}));
+			storage.set('RO', JSON.stringify({days: '0', maximumDays: '0'}));
+			storage.set('RU', JSON.stringify({days: '0', maximumDays: '0'}));
+			storage.set('EH', JSON.stringify({days: '0', maximumDays: '0'}));
+			storage.set('BL', JSON.stringify({days: '0', maximumDays: '0'}));
+			storage.set('MF', JSON.stringify({days: '0', maximumDays: '0'}));
+			storage.set('SB', JSON.stringify({days: '0', maximumDays: '0'}));
+			storage.set('AS', JSON.stringify({days: '0', maximumDays: '0'}));
+			storage.set('WS', JSON.stringify({days: '0', maximumDays: '0'}));
+			storage.set('KN', JSON.stringify({days: '0', maximumDays: '0'}));
+			storage.set('SM', JSON.stringify({days: '0', maximumDays: '0'}));
+			storage.set('PM', JSON.stringify({days: '0', maximumDays: '0'}));
+			storage.set('VC', JSON.stringify({days: '0', maximumDays: '0'}));
+			storage.set('SH', JSON.stringify({days: '0', maximumDays: '0'}));
+			storage.set('LC', JSON.stringify({days: '0', maximumDays: '0'}));
+			storage.set('VA', JSON.stringify({days: '0', maximumDays: '0'}));
+			storage.set('ST', JSON.stringify({days: '0', maximumDays: '0'}));
+			storage.set('SN', JSON.stringify({days: '0', maximumDays: '0'}));
+			storage.set('RS', JSON.stringify({days: '0', maximumDays: '0'}));
+			storage.set('SC', JSON.stringify({days: '0', maximumDays: '0'}));
+			storage.set('SL', JSON.stringify({days: '0', maximumDays: '0'}));
+			storage.set('SG', JSON.stringify({days: '0', maximumDays: '0'}));
+			storage.set('SX', JSON.stringify({days: '0', maximumDays: '0'}));
+			storage.set('SO', JSON.stringify({days: '0', maximumDays: '0'}));
+			storage.set('LK', JSON.stringify({days: '0', maximumDays: '0'}));
+			storage.set('SZ', JSON.stringify({days: '0', maximumDays: '0'}));
+			storage.set('ZA', JSON.stringify({days: '0', maximumDays: '0'}));
+			storage.set('SS', JSON.stringify({days: '0', maximumDays: '0'}));
+			storage.set('SD', JSON.stringify({days: '0', maximumDays: '0'}));
+			storage.set('SE', JSON.stringify({days: '0', maximumDays: '0'}));
+			storage.set('CH', JSON.stringify({days: '0', maximumDays: '0'}));
+			storage.set('SR', JSON.stringify({days: '0', maximumDays: '0'}));
+			storage.set('SJ', JSON.stringify({days: '0', maximumDays: '0'}));
+			storage.set('TH', JSON.stringify({days: '0', maximumDays: '0'}));
+			storage.set('TW', JSON.stringify({days: '0', maximumDays: '0'}));
+			storage.set('TZ', JSON.stringify({days: '0', maximumDays: '0'}));
+			storage.set('TJ', JSON.stringify({days: '0', maximumDays: '0'}));
+			storage.set('IO', JSON.stringify({days: '0', maximumDays: '0'}));
+			storage.set('TF', JSON.stringify({days: '0', maximumDays: '0'}));
+			storage.set('TL', JSON.stringify({days: '0', maximumDays: '0'}));
+			storage.set('TG', JSON.stringify({days: '0', maximumDays: '0'}));
+			storage.set('TK', JSON.stringify({days: '0', maximumDays: '0'}));
+			storage.set('TO', JSON.stringify({days: '0', maximumDays: '0'}));
+			storage.set('TT', JSON.stringify({days: '0', maximumDays: '0'}));
+			storage.set('TN', JSON.stringify({days: '0', maximumDays: '0'}));
+			storage.set('TC', JSON.stringify({days: '0', maximumDays: '0'}));
+			storage.set('TM', JSON.stringify({days: '0', maximumDays: '0'}));
+			storage.set('TR', JSON.stringify({days: '0', maximumDays: '0'}));
+			storage.set('TV', JSON.stringify({days: '0', maximumDays: '0'}));
+			storage.set('UA', JSON.stringify({days: '0', maximumDays: '0'}));
+			storage.set('UG', JSON.stringify({days: '0', maximumDays: '0'}));
+			storage.set('UY', JSON.stringify({days: '0', maximumDays: '0'}));
+			storage.set('UZ', JSON.stringify({days: '0', maximumDays: '0'}));
+			storage.set('VU', JSON.stringify({days: '0', maximumDays: '0'}));
+			storage.set('VE', JSON.stringify({days: '0', maximumDays: '0'}));
+			storage.set('VN', JSON.stringify({days: '0', maximumDays: '0'}));
+			storage.set('VG', JSON.stringify({days: '0', maximumDays: '0'}));
+			storage.set('VI', JSON.stringify({days: '0', maximumDays: '0'}));
+			storage.set('WF', JSON.stringify({days: '0', maximumDays: '0'}));
+			storage.set('YE', JSON.stringify({days: '0', maximumDays: '0'}));
+			storage.set('DJ', JSON.stringify({days: '0', maximumDays: '0'}));
+			storage.set('ZM', JSON.stringify({days: '0', maximumDays: '0'}));
+			storage.set('ZW', JSON.stringify({days: '0', maximumDays: '0'}));
