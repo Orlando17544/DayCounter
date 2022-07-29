@@ -855,9 +855,9 @@ const App: () => Node = () => {
 
 					const maximumDays = userDataItem.maximumDays;
 
-					console.log('Así se guardará la información: ');
-					console.log(countryCode + ", "+ JSON.stringify({countryCode: countryCode, days: days, maximumDays: maximumDays}));
-					storage.set(countryCode, JSON.stringify({countryCode: countryCode, days: days, maximumDays: maximumDays}));
+					if (countryCode == userDataItem.countryCode) {
+						setUserData({...userData, days: days})
+					}
 				}
 
 				if (state.isInternetReachable) {
@@ -889,7 +889,6 @@ const App: () => Node = () => {
 					);
 				} else {
 					async function storeData(latitude, longitude) {
-						console.log(Math.random().toString() + ', ' + JSON.stringify({latitude: latitude, longitude: longitude}));
 						storagePositions.set(Math.random().toString(), JSON.stringify({latitude: latitude, longitude: longitude}));
 					}
 					//For current location
@@ -907,14 +906,6 @@ const App: () => Node = () => {
 						{ enableHighAccuracy: true, maximumAge: 1, distanceFilter: 1 }
 					);
 				}
-				console.log('Información del usuario: ' + storage.getString('MEX'));
-				console.log('Posiciones almacenadas: ');
-				const keysPositions = storagePositions.getAllKeys();
-
-				keysPositions.forEach(keyPosition => {
-					console.log(storagePositions.getString(keyPosition));
-				});
-
 				// IMPORTANT:  You must signal to the OS that your task is complete.
 				BackgroundFetch.finish(taskId);
 			}
