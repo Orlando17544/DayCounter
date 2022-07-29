@@ -855,7 +855,7 @@ const App: () => Node = () => {
 
 					const maximumDays = userDataItem.maximumDays;
 
-					if (countryCode == userDataItem.countryCode) {
+					if (countryCode == userData.countryCode) {
 						setUserData({...userData, days: days})
 					}
 				}
@@ -976,6 +976,8 @@ const App: () => Node = () => {
 		data={COUNTRIES_DATA_ARRAY}
 		renderItem={renderItem}
 		keyExtractor={item => item.code}
+		initialNumToRender={30}
+		maxToRenderPerBatch={30}
 		/>
 		</View>
 		</Modal>
