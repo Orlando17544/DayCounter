@@ -46,7 +46,7 @@ export const storagePositions = new MMKV({
 
 import NetInfo from "@react-native-community/netinfo";
 
-const API_KEY_here = 'U_nyPYH1PMPzdSK8TlLZ3kx_jTKNQfX75lsTsSJ1OeE';
+import API_KEY_here from './API_KEY_here.js';
 
 const FRECUENCY_HOURS = 1 / 4;
 
@@ -851,13 +851,11 @@ const App: () => Node = () => {
 
 					const userDataItem = JSON.parse(storage.getString(countryCode));
 
-					const days = userDataItem.days + 1 * FRECUENCY_HOURS / 24;
+					const newDays = userDataItem.days + 1 * FRECUENCY_HOURS / 24;
 
-					const maximumDays = userDataItem.maximumDays;
-
-					if (countryCode == userDataItem.countryCode) {
-						setUserData({...userData, days: days})
-					}
+					console.log({...userDataItem, days: newDays});
+					setUserData({...userDataItem, days: newDays});
+					storage.set(countryCode, JSON.stringify({...userDataItem, days: newDays}));
 				}
 
 				if (state.isInternetReachable) {
@@ -976,6 +974,8 @@ const App: () => Node = () => {
 		data={COUNTRIES_DATA_ARRAY}
 		renderItem={renderItem}
 		keyExtractor={item => item.code}
+		initialNumToRender={50}
+		maxToRenderPerBatch={50}
 		/>
 		</View>
 		</Modal>
