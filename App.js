@@ -46,7 +46,7 @@ export const storagePositions = new MMKV({
 
 import NetInfo from "@react-native-community/netinfo";
 
-const API_KEY_here = 'U_nyPYH1PMPzdSK8TlLZ3kx_jTKNQfX75lsTsSJ1OeE';
+import API_KEY_here from './API_KEY_here.js';
 
 const FRECUENCY_HOURS = 1 / 4;
 
