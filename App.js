@@ -851,13 +851,11 @@ const App: () => Node = () => {
 
 					const userDataItem = JSON.parse(storage.getString(countryCode));
 
-					const days = userDataItem.days + 1 * FRECUENCY_HOURS / 24;
+					const newDays = userDataItem.days + 1 * FRECUENCY_HOURS / 24;
 
-					const maximumDays = userDataItem.maximumDays;
-
-					if (countryCode == userData.countryCode) {
-						setUserData({...userData, days: days})
-					}
+					console.log({...userDataItem, days: newDays});
+					setUserData({...userDataItem, days: newDays});
+					storage.set(countryCode, JSON.stringify({...userDataItem, days: newDays}));
 				}
 
 				if (state.isInternetReachable) {
@@ -976,8 +974,8 @@ const App: () => Node = () => {
 		data={COUNTRIES_DATA_ARRAY}
 		renderItem={renderItem}
 		keyExtractor={item => item.code}
-		initialNumToRender={30}
-		maxToRenderPerBatch={30}
+		initialNumToRender={50}
+		maxToRenderPerBatch={50}
 		/>
 		</View>
 		</Modal>
