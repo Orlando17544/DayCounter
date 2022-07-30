@@ -57,6 +57,8 @@ static NSString *const kRNConcurrentRoot = @"concurrentRoot";
   rootViewController.view = rootView;
   self.window.rootViewController = rootViewController;
   [self.window makeKeyAndVisible];
+  // [REQUIRED] Register BackgroundFetch
+  [[TSBackgroundFetch sharedInstance] didFinishLaunching];
   return YES;
 }
 
@@ -81,6 +83,8 @@ static NSString *const kRNConcurrentRoot = @"concurrentRoot";
 
   return initProps;
 }
+
+#import <TSBackgroundFetch/TSBackgroundFetch.h>
 
 - (NSURL *)sourceURLForBridge:(RCTBridge *)bridge
 {

@@ -5794,10 +5794,10 @@
   "resolved" "https://registry.npmjs.org/react-is/-/react-is-16.13.1.tgz"
   "version" "16.13.1"
 
-"react-native-background-fetch@^4.1.1":
-  "integrity" "sha512-zciV2Y5XvsGo00xoXkospNDM6u5fEOE2Jwu1d9chT6QhmbX2PNBHHg2ZWZClaN1GCwKfssp0GG3fRbye4/KVrw=="
-  "resolved" "https://registry.npmjs.org/react-native-background-fetch/-/react-native-background-fetch-4.1.1.tgz"
-  "version" "4.1.1"
+"react-native-background-fetch@^4.1.2":
+  "integrity" "sha512-hx/fIadV6NdeHkeH8iRVKeoZjVb1vAlDLClA8K0ynqZs1o1YYIfwB/sqh3bO+FKIHVnBodxJrtvLgXowql6PDA=="
+  "resolved" "https://registry.npmjs.org/react-native-background-fetch/-/react-native-background-fetch-4.1.2.tgz"
+  "version" "4.1.2"
 
 "react-native-codegen@^0.69.1":
   "integrity" "sha512-TOZEqBarczcyYN3iZE3VpKkooOevaAzBq9n7lU0h9mQUvtRhLVyolc+a5K6cWI0e4v4K69I0MqzjPcPeFKo32Q=="
