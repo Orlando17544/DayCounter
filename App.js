@@ -855,6 +855,7 @@ const App: () => Node = () => {
 
 					console.log({...userDataItem, days: newDays});
 					setUserData({...userDataItem, days: newDays});
+					load(newDays, userDataItem.maximumDays);
 					storage.set(countryCode, JSON.stringify({...userDataItem, days: newDays}));
 				}
 
