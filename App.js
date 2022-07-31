@@ -25,7 +25,7 @@ import {
 	Alert,
 	FlatList,
 	Platform,
-	AppState
+	AppState,
 } from 'react-native';
 
 import LinearGradient from 'react-native-linear-gradient';
@@ -819,6 +819,65 @@ const App: () => Node = () => {
 	const [userData, setUserData] = useState(JSON.parse(storage.getString('AFG')));
 	const [modalVisibleCountries, setModalVisibleCountries] = useState(false);
 
+	async function updateData(latitude, longitude) {
+		const coordinates = latitude + ',' + longitude;
+		const coordinatesEncoded = encodeURIComponent(coordinates);
+
+		const URL = 'https://revgeocode.search.hereapi.com/v1/revgeocode?' + 'at=' + coordinatesEncoded + '&' + 'lang=en-US' + '&' + 'apiKey=' + API_KEY_here;
+
+		const response = await axios.get(URL);
+
+		const countryCode = response.data.items[0].address.countryCode;
+
+		const userDataItem = JSON.parse(storage.getString(countryCode));
+
+		const newDays = userDataItem.days + 1 * FRECUENCY_HOURS / 24;
+
+		console.log({...userDataItem, days: newDays});
+		setUserData({...userDataItem, days: newDays});
+		load(newDays, userDataItem.maximumDays);
+		storage.set(countryCode, JSON.stringify({...userDataItem, days: newDays}));
+
+		onDisplayNotification(4, countryCode);	
+		/*
+
+			   const daysLeft = userDataItem.maximumDays - newDays;
+
+			   if (daysLeft <= DAYS_LEFT_NOTIFY && daysLeft >= 0) {
+			   onDisplayNotification(daysLeft, countryCode);	
+			   }*/
+	}
+	
+	//For positions that have been stored
+	async function updatePositionsData() {
+
+		const keysPositions = storagePositions.getAllKeys();
+
+		keysPositions.forEach(keyPosition => {
+			const position = JSON.parse(storagePositions.getString(keyPosition));
+
+			const latitude = position.latitude;
+			const longitude = position.longitude;
+
+			updateData(latitude, longitude);
+		});
+	}
+
+	useEffect(() => {
+		const unsubscribe = NetInfo.addEventListener(state => {
+			if (state.isInternetReachable) {
+				console.log('internet is on');
+				updatePositionsData();
+			} else {
+				console.log('internet is off');
+			}
+		});
+
+		return () => {
+			unsubscribe();
+		};
+	}, []);
+
 	const appState = useRef(AppState.currentState);
 	const [appStateVisible, setAppStateVisible] = useState(appState.current);
 
@@ -882,47 +941,9 @@ const App: () => Node = () => {
 				// Do your background work...
 				const state = await NetInfo.fetch();
 
-				async function updateData(latitude, longitude) {
-					const coordinates = latitude + ',' + longitude;
-					const coordinatesEncoded = encodeURIComponent(coordinates);
-
-					const URL = 'https://revgeocode.search.hereapi.com/v1/revgeocode?' + 'at=' + coordinatesEncoded + '&' + 'lang=en-US' + '&' + 'apiKey=' + API_KEY_here;
-
-					const response = await axios.get(URL);
-
-					const countryCode = response.data.items[0].address.countryCode;
-
-					const userDataItem = JSON.parse(storage.getString(countryCode));
-
-					const newDays = userDataItem.days + 1 * FRECUENCY_HOURS / 24;
-
-					console.log({...userDataItem, days: newDays});
-					setUserData({...userDataItem, days: newDays});
-					load(newDays, userDataItem.maximumDays);
-					storage.set(countryCode, JSON.stringify({...userDataItem, days: newDays}));
-
-					onDisplayNotification(4, countryCode);	
-					/*
-
-						   const daysLeft = userDataItem.maximumDays - newDays;
-
-						   if (daysLeft <= DAYS_LEFT_NOTIFY && daysLeft >= 0) {
-						   onDisplayNotification(daysLeft, countryCode);	
-						   }*/
-				}
-
 				if (state.isInternetReachable) {
 					//For positions that have been stored
-					const keysPositions = storagePositions.getAllKeys();
-
-					keysPositions.forEach(keyPosition => {
-						const position = JSON.parse(storagePositions.getString(keyPosition));
-
-						const latitude = position.latitude;
-						const longitude = position.longitude;
-
-						updateData(latitude, longitude);
-					});
+					await updatePositionsData();
 
 					//For current location
 					Geolocation.getCurrentPosition(
