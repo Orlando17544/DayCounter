@@ -46,9 +46,13 @@ export const storagePositions = new MMKV({
 
 import NetInfo from "@react-native-community/netinfo";
 
+import notifee, { EventType } from '@notifee/react-native';
+
 import API_KEY_here from './API_KEY_here.js';
 
 const FRECUENCY_HOURS = 1 / 4;
+
+const DAYS_LEFT_NOTIFY = 10;
 
 if (storage.getBoolean('hasBeenOpened') == undefined) {
 	storage.set('hasBeenOpened', true);
@@ -808,10 +812,10 @@ COUNTRIES_DATA_ARRAY = [
 ];
 
 const App: () => Node = () => {
-
 	const [userData, setUserData] = useState(JSON.parse(storage.getString('AFG')));
 	const [modalVisibleCountries, setModalVisibleCountries] = useState(false);
 
+	console.log("algo");
 	useEffect(() => {
 		async function askPermissions() {
 			try {
@@ -855,7 +859,17 @@ const App: () => Node = () => {
 
 					console.log({...userDataItem, days: newDays});
 					setUserData({...userDataItem, days: newDays});
+					load(newDays, userDataItem.maximumDays);
 					storage.set(countryCode, JSON.stringify({...userDataItem, days: newDays}));
+
+					onDisplayNotification(4, countryCode);	
+					/*
+
+					const daysLeft = userDataItem.maximumDays - newDays;
+
+					if (daysLeft <= DAYS_LEFT_NOTIFY && daysLeft >= 0) {
+						onDisplayNotification(daysLeft, countryCode);	
+					}*/
 				}
 
 				if (state.isInternetReachable) {
@@ -925,6 +939,13 @@ const App: () => Node = () => {
 		}
 
 		initBackgroundFetch();
+
+		return notifee.onForegroundEvent(({ type, detail }) => {
+			switch (type) {
+				case EventType.PRESS:
+					setUserData(JSON.parse(storage.getString(detail.notification.id)));
+			}
+		});
 	}, []);
 
 
@@ -945,6 +966,36 @@ const App: () => Node = () => {
 		}).start();
 	};
 
+	async function onDisplayNotification(daysLeft, countryCode) {
+		// Request permissions (required for iOS)
+		await notifee.requestPermission()
+
+		// Create a channel (required for Android)
+		const channelId = await notifee.createChannel({
+			id: 'default',
+			name: 'Default Channel',
+			sound: 'default',
+		});
+
+		// Display a notification
+		await notifee.displayNotification({
+			id: countryCode,
+			title: 'Fatan ' + daysLeft + ' días',
+			body: 'Te faltan ' + daysLeft + ' días en ' + COUNTRIES_DATA[countryCode].name,
+			android: {
+				channelId,
+				smallIcon: 'ic_launcher', // optional, defaults to 'ic_launcher'.
+				// pressAction is needed if you want the notification to open the app when pressed
+				pressAction: {
+					id: 'default',
+				},
+			},
+			ios: {
+				sound: 'default',
+			},
+		});
+	}
+
 	const renderItem = ({ item }) => (
 		<TouchableOpacity key={item.code} style={{paddingBottom: 8}} onPress={() => {setUserData(JSON.parse(storage.getString(item.code))); setModalVisibleCountries(false); load(JSON.parse(storage.getString(item.code)).days, JSON.parse(storage.getString(item.code)).maximumDays);}}>
 		<View style={{flexDirection: 'row', alignItems: 'center'}}>
@@ -960,7 +1011,7 @@ const App: () => Node = () => {
 		<StatusBar barStyle={isDarkMode ? 'light-content' : 'dark-content'} />
 		<View style={{alignItems: 'center'}}>
 		<Text style={styles.text}>Tus días en </Text>
-		<TouchableOpacity onPress={() => {setModalVisibleCountries(true);}}>
+		<TouchableOpacity onPress={() => {setModalVisibleCountries(true); onDisplayNotification(4, 'JPN');}}>
 		<Text style={[styles.text, {fontWeight: 'bold'} ]}>{COUNTRIES_DATA[userData.countryCode].name}</Text>
 		</TouchableOpacity>
 		<Modal
