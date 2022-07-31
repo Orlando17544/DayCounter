@@ -1344,6 +1344,11 @@
     "@jridgewell/resolve-uri" "^3.0.3"
     "@jridgewell/sourcemap-codec" "^1.4.10"
 
+"@notifee/react-native@^5.5.0":
+  "integrity" "sha512-Ips1TMfQ4+94uf3mpJ8LvpDdGFA972V/1hQaLk/aVo79vCOmWSGAdqOu5HjdWiecPoi4+TzYPDD2079nVBM8Qw=="
+  "resolved" "https://registry.npmjs.org/@notifee/react-native/-/react-native-5.5.0.tgz"
+  "version" "5.5.0"
+
 "@react-native-community/cli-clean@^8.0.0":
   "integrity" "sha512-VY/kwyH5xp6oXiB9bcwa+I9W5k6WR/nX3s85FuMW76hSlgG1UVAGL04uZPwYlSmMZuSOSuoXOaIjJ7wAvQMBpg=="
   "resolved" "https://registry.npmjs.org/@react-native-community/cli-clean/-/cli-clean-8.0.0.tgz"
