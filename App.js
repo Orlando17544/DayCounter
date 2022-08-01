@@ -58,8 +58,7 @@ const FRECUENCY_HOURS = 1 / 4;
 
 const DAYS_LEFT_NOTIFY = 10;
 
-if (storage.getBoolean('hasBeenOpened') == undefined) {
-	storage.set('hasBeenOpened', true);
+if (storage.getAllKeys().length == 0) {
 	storage.set('AFG', JSON.stringify({countryCode: 'AFG', days: 80, maximumDays: 0}));
 	storage.set('ALA', JSON.stringify({countryCode: 'ALA', days: 40, maximumDays: 0}));
 	storage.set('ALB', JSON.stringify({countryCode: 'ALB', days: 200, maximumDays: 0}));
@@ -849,9 +848,9 @@ const App: () => Node = () => {
 			},
 		});
 	}
-	
+
 	// Save user data in storage
-	async function updateData(latitude, longitude) {
+	async function updateData(latitude, longitude, timeElapsedDays) {
 		const coordinates = latitude + ',' + longitude;
 		const coordinatesEncoded = encodeURIComponent(coordinates);
 
@@ -863,7 +862,7 @@ const App: () => Node = () => {
 
 		const userDataItem = JSON.parse(storage.getString(countryCode));
 
-		const newDays = userDataItem.days + 1 * FRECUENCY_HOURS / 24;
+		const newDays = userDataItem.days + timeElapsedDays;
 
 		console.log({...userDataItem, days: newDays});
 		setUserData({...userDataItem, days: newDays});
@@ -873,269 +872,257 @@ const App: () => Node = () => {
 		onDisplayNotification(4, countryCode);	
 		/*
 
-			   const daysLeft = userDataItem.maximumDays - newDays;
+		const daysLeft = userDataItem.maximumDays - newDays;
 
-			   if (daysLeft <= DAYS_LEFT_NOTIFY && daysLeft >= 0) {
-			   onDisplayNotification(daysLeft, countryCode);	
-			   }*/
+		if (daysLeft <= DAYS_LEFT_NOTIFY && daysLeft >= 0) {
+		onDisplayNotification(daysLeft, countryCode);	
+		}*/
 	}
-	
+
 	// Save positions that have been stored in storage
 	async function updatePositionsData() {
+		let millisecondsDatesKeys = storagePositions.getAllKeys();
 
-		const keysPositions = storagePositions.getAllKeys();
+		let millisecondsDatesKeysIntegers = millisecondsDatesKeys.map(millisecondsDateKey => {
+			return parseInt(millisecondsDateKey, 10);
+		});
 
-		keysPositions.forEach(keyPosition => {
-			const position = JSON.parse(storagePositions.getString(keyPosition));
+		// Ascending order
+		millisecondsDatesKeysIntegers.sort(function(a, b){return a-b});
+
+		for (var i = 0; i < millisecondsDatesKeysIntegers.length - 1; i++) {
+			const timeElapsedMilliseconds = millisecondsDatesKeysIntegers[i + 1] - millisecondsDatesKeysIntegers[i];
+			const timeElapsedDays = timeElapsedMilliseconds * 1.15741 * Math.pow(10, -8);
+			const position = JSON.parse(storagePositions.getString(millisecondsDatesKeysIntegers[i].toString()));
 
 			const latitude = position.latitude;
 			const longitude = position.longitude;
 
-			updateData(latitude, longitude);
-		});
+			updateData(latitude, longitude, timeElapsedDays);
+			storagePositions.delete(millisecondsDatesKeysIntegers[i].toString());
+		}
+	};
+
+
+// Activates when internet is on to update data
+useEffect(() => {
+	const unsubscribe = NetInfo.addEventListener(state => {
+		if (state.isInternetReachable) {
+			console.log('internet is on');
+			updatePositionsData();
+		} else {
+			console.log('internet is off');
+		}
+	});
+
+	return () => {
+		unsubscribe();
+	};
+}, []);
+
+// Foreground events of notifications
+useEffect(() => {
+	return notifee.onForegroundEvent(({ type, detail }) => {
+		switch (type) {
+			case EventType.PRESS:
+				setUserData(JSON.parse(storage.getString(detail.notification.id)));
+		}
+	});
+}, []);
+
+// Background events of notifications
+const appState = useRef(AppState.currentState);
+const [appStateVisible, setAppStateVisible] = useState(appState.current);
+
+useEffect(() => {
+	const subscription = AppState.addEventListener("change", nextAppState => {
+		if (appState.current.match(/inactive|background/) && nextAppState === "active") {
+			console.log("App has come to the foreground!");
+			if (storageNotifications.contains('notification')) {
+				console.log('Se ha cambiado la userData desde una notificación en background');
+				const countryCodeNotification = storageNotifications.getString('notification');
+				const userDataItem = JSON.parse(storage.getString(countryCodeNotification));
+				setUserData(userDataItem);
+				storageNotifications.delete('notification');	
+			}
+		}
+
+		appState.current = nextAppState;
+		setAppStateVisible(appState.current);
+		console.log("AppState", appState.current);
+	});
+
+	return () => {
+		subscription.remove();
+	};
+}, []);
+
+// Permissions location
+useEffect(() => {
+	async function askPermissionsAndroid() {
+		try {
+			let permissionFineLocation = await PermissionsAndroid.check(PermissionsAndroid.PERMISSIONS.ACCESS_FINE_LOCATION);
+			let permissionCoarseLocation = await PermissionsAndroid.check(PermissionsAndroid.PERMISSIONS.ACCESS_COARSE_LOCATION);
+			let permissionBackgroundLocation = await PermissionsAndroid.check(PermissionsAndroid.PERMISSIONS.ACCESS_BACKGROUND_LOCATION);
+
+			if (!permissionFineLocation || !permissionCoarseLocation || ! permissionBackgroundLocation) {
+				PermissionsAndroid.requestMultiple([
+					PermissionsAndroid.PERMISSIONS.ACCESS_FINE_LOCATION, 
+					PermissionsAndroid.PERMISSIONS.ACCESS_COARSE_LOCATION, 
+					PermissionsAndroid.PERMISSIONS.ACCESS_BACKGROUND_LOCATION
+				]);
+			}
+		} catch(error) {
+			console.log(error);
+		}
 	}
 
-	// Activates when internet is on to save positions
-	useEffect(() => {
-		const unsubscribe = NetInfo.addEventListener(state => {
-			if (state.isInternetReachable) {
-				console.log('internet is on');
-				updatePositionsData();
-			} else {
-				console.log('internet is off');
+	async function askPermissionsiOS() {
+		const statusAuthorization = await Geolocation.requestAuthorization('always');
+		console.log(statusAuthorization);
+	}
+
+	if (Platform.OS === 'ios') {
+		askPermissionsiOS();
+	} else {
+		askPermissionsAndroid();
+	}
+}, []);
+
+
+// Background tasks
+useEffect(() => {
+	async function initBackgroundFetch() {
+		const onEvent = async (taskId) => {
+			console.log('[BackgroundFetch] task: ', taskId);
+			// Do your background work...
+			async function storeData(latitude, longitude, millisecondsDate) {
+				storagePositions.set(millisecondsDate.toString(), JSON.stringify({latitude: latitude, longitude: longitude}));
 			}
-		});
+			//For current location
+			Geolocation.getCurrentPosition(
+				(position) => {
+					const latitude = position.coords.latitude;
+					const longitude = position.coords.longitude;
 
-		return () => {
-			unsubscribe();
-		};
-	}, []);
-
-	// Foreground events of notifications
-	useEffect(() => {
-		return notifee.onForegroundEvent(({ type, detail }) => {
-			switch (type) {
-				case EventType.PRESS:
-					setUserData(JSON.parse(storage.getString(detail.notification.id)));
-			}
-		});
-	}, []);
-
-	// Background events of notifications
-	const appState = useRef(AppState.currentState);
-	const [appStateVisible, setAppStateVisible] = useState(appState.current);
-
-	useEffect(() => {
-		const subscription = AppState.addEventListener("change", nextAppState => {
-			if (appState.current.match(/inactive|background/) && nextAppState === "active") {
-				console.log("App has come to the foreground!");
-				if (storageNotifications.contains('notification')) {
-					console.log('Se ha cambiado la userData desde una notificación en background');
-					const countryCodeNotification = storageNotifications.getString('notification');
-					const userDataItem = JSON.parse(storage.getString(countryCodeNotification));
-					setUserData(userDataItem);
-					storageNotifications.delete('notification');	
-				}
-			}
-
-			appState.current = nextAppState;
-			setAppStateVisible(appState.current);
-			console.log("AppState", appState.current);
-		});
-
-		return () => {
-			subscription.remove();
-		};
-	}, []);
-
-	// Permissions location
-	useEffect(() => {
-		async function askPermissionsAndroid() {
-			try {
-				let permissionFineLocation = await PermissionsAndroid.check(PermissionsAndroid.PERMISSIONS.ACCESS_FINE_LOCATION);
-				let permissionCoarseLocation = await PermissionsAndroid.check(PermissionsAndroid.PERMISSIONS.ACCESS_COARSE_LOCATION);
-				let permissionBackgroundLocation = await PermissionsAndroid.check(PermissionsAndroid.PERMISSIONS.ACCESS_BACKGROUND_LOCATION);
-
-				if (!permissionFineLocation || !permissionCoarseLocation || ! permissionBackgroundLocation) {
-					PermissionsAndroid.requestMultiple([
-						PermissionsAndroid.PERMISSIONS.ACCESS_FINE_LOCATION, 
-						PermissionsAndroid.PERMISSIONS.ACCESS_COARSE_LOCATION, 
-						PermissionsAndroid.PERMISSIONS.ACCESS_BACKGROUND_LOCATION
-					]);
-				}
-			} catch(error) {
-				console.log(error);
-			}
+					storeData(latitude, longitude, Date.now());
+				},
+				(error) => {
+					// See error code charts below.
+					console.log(error.code, error.message);
+				},
+				{ enableHighAccuracy: true, maximumAge: 1, distanceFilter: 1 }
+			);
+			// IMPORTANT:  You must signal to the OS that your task is complete.
+			BackgroundFetch.finish(taskId);
 		}
 
-		async function askPermissionsiOS() {
-			const statusAuthorization = await Geolocation.requestAuthorization('always');
-			console.log(statusAuthorization);
+		const onTimeout = async (taskId) => {
+			console.warn('[BackgroundFetch] TIMEOUT task: ', taskId);
+			BackgroundFetch.finish(taskId);
 		}
 
-		if (Platform.OS === 'ios') {
-			askPermissionsiOS();
-		} else {
-			askPermissionsAndroid();
+		let status = await BackgroundFetch.configure({minimumFetchInterval: FRECUENCY_HOURS * 60, enableHeadless: true}, onEvent, onTimeout);
+
+		if (status == 0) {
+			console.log("Restricted");
+		} else if (status == 1) {
+			console.log("Denied");
+		} else if (status == 2) {
+			console.log("Available");
 		}
-	}, []);
+	}
 
+	initBackgroundFetch();
 
-	// Background tasks
-	useEffect(() => {
-		async function initBackgroundFetch() {
-			const onEvent = async (taskId) => {
-				console.log('[BackgroundFetch] task: ', taskId);
-				// Do your background work...
-				const state = await NetInfo.fetch();
+}, []);
 
-				if (state.isInternetReachable) {
-					//For positions that have been stored
-					await updatePositionsData();
+const backgroundStyle = {
+	backgroundColor: isDarkMode ? '#222' : '#F3F3F3',
+};
 
-					//For current location
-					Geolocation.getCurrentPosition(
-						(position) => {
-							const latitude = position.coords.latitude;
-							const longitude = position.coords.longitude;
+const isDarkMode = useColorScheme() === 'dark';
 
-							updateData(latitude, longitude);
-						},
-						(error) => {
-							// See error code charts below.
-							console.log(error.code, error.message);
-						},
-						{ enableHighAccuracy: true, maximumAge: 1, distanceFilter: 1 }
-					);
-				} else {
-					async function storeData(latitude, longitude) {
-						storagePositions.set(Math.random().toString(), JSON.stringify({latitude: latitude, longitude: longitude}));
-					}
-					//For current location
-					Geolocation.getCurrentPosition(
-						(position) => {
-							const latitude = position.coords.latitude;
-							const longitude = position.coords.longitude;
+// Animations
+const loaderValue = useRef(new Animated.Value(0)).current;
 
-							storeData(latitude, longitude);
-						},
-						(error) => {
-							// See error code charts below.
-							console.log(error.code, error.message);
-						},
-						{ enableHighAccuracy: true, maximumAge: 1, distanceFilter: 1 }
-					);
-				}
-				// IMPORTANT:  You must signal to the OS that your task is complete.
-				BackgroundFetch.finish(taskId);
-			}
+const load = (days, maximumDays) => {
+	Animated.timing(loaderValue, {
+		toValue: isFinite(Math.round(days * 100 / maximumDays)) ? Math.round(days * 100 / maximumDays) : 0,
+		duration: 1000,
+		useNativeDriver: false
+	}).start();
+};
 
-			const onTimeout = async (taskId) => {
-				console.warn('[BackgroundFetch] TIMEOUT task: ', taskId);
-				BackgroundFetch.finish(taskId);
-			}
+const renderItem = ({ item }) => (
+	<TouchableOpacity key={item.code} style={{paddingBottom: 8}} onPress={() => {setUserData(JSON.parse(storage.getString(item.code))); setModalVisibleCountries(false); load(JSON.parse(storage.getString(item.code)).days, JSON.parse(storage.getString(item.code)).maximumDays);}}>
+	<View style={{flexDirection: 'row', alignItems: 'center'}}>
+	<Image style={styles.flag} source={item.source}/>
+	<Text style={{color: '#2c2c2c', fontSize: 15, marginLeft: 15}}>{item.name}</Text>
+	</View>
+	</TouchableOpacity>
+);
 
-			let status = await BackgroundFetch.configure({minimumFetchInterval: FRECUENCY_HOURS * 60}, onEvent, onTimeout);
+return (
+	<LinearGradient style={styles.container} colors={['#1e2818', '#020304']}>
+	<SafeAreaView>
+	<StatusBar barStyle={isDarkMode ? 'light-content' : 'dark-content'} />
+	<View style={{alignItems: 'center'}}>
+	<Text style={styles.text}>Tus días en </Text>
+	<TouchableOpacity onPress={() => {setModalVisibleCountries(true);}}>
+	<Text style={[styles.text, {fontWeight: 'bold'} ]}>{COUNTRIES_DATA[userData.countryCode].name}</Text>
+	</TouchableOpacity>
+	<Modal
+	visible={modalVisibleCountries}
+	transparent={true}
+	animationType='fade'
+	onRequestClose={() => {setModalVisibleCountries(false);}}
+	>
+	<View style={{flex: 1, marginVertical: 15, marginHorizontal: 15, backgroundColor: 'white', borderRadius: 5, paddingHorizontal: 15, paddingVertical: 15}}>
+	<FlatList
+	data={COUNTRIES_DATA_ARRAY}
+	renderItem={renderItem}
+	keyExtractor={item => item.code}
+	initialNumToRender={50}
+	maxToRenderPerBatch={50}
+	/>
+	</View>
+	</Modal>
+	<Image style={styles.flag} source={COUNTRIES_DATA[userData.countryCode].source}/>
+	<View style={{flexDirection: 'row', alignItems: 'center'}}>
+	<Text style={styles.text}>{userData.days.toString()}/</Text>
+	<TextInput
+	style={[styles.text, {fontWeight: 'bold'} ]}
+	value={userData.maximumDays.toString()}
+	onChangeText={newMaximumDays => {
+		const regex = /[^\d]/g;
 
-			if (status == 0) {
-				console.log("Restricted");
-			} else if (status == 1) {
-				console.log("Denied");
-			} else if (status == 2) {
-				console.log("Available");
-			}
+		if (newMaximumDays == '') {
+			newMaximumDays = '0';
+		} else if (regex.test(newMaximumDays)) {
+			newMaximumDays = newMaximumDays.replace(regex, '');
 		}
 
-		initBackgroundFetch();
+		newMaximumDays = parseInt(newMaximumDays);
 
-	}, []);
-
-	const backgroundStyle = {
-		backgroundColor: isDarkMode ? '#222' : '#F3F3F3',
-	};
-
-	const isDarkMode = useColorScheme() === 'dark';
-
-	// Animations
-	const loaderValue = useRef(new Animated.Value(0)).current;
-
-	const load = (days, maximumDays) => {
-		Animated.timing(loaderValue, {
-			toValue: isFinite(Math.round(days * 100 / maximumDays)) ? Math.round(days * 100 / maximumDays) : 0,
-			duration: 1000,
-			useNativeDriver: false
-		}).start();
-	};
-
-	const renderItem = ({ item }) => (
-		<TouchableOpacity key={item.code} style={{paddingBottom: 8}} onPress={() => {setUserData(JSON.parse(storage.getString(item.code))); setModalVisibleCountries(false); load(JSON.parse(storage.getString(item.code)).days, JSON.parse(storage.getString(item.code)).maximumDays);}}>
-		<View style={{flexDirection: 'row', alignItems: 'center'}}>
-		<Image style={styles.flag} source={item.source}/>
-		<Text style={{color: '#2c2c2c', fontSize: 15, marginLeft: 15}}>{item.name}</Text>
-		</View>
-		</TouchableOpacity>
-	);
-
-	return (
-		<LinearGradient style={styles.container} colors={['#1e2818', '#020304']}>
-		<SafeAreaView>
-		<StatusBar barStyle={isDarkMode ? 'light-content' : 'dark-content'} />
-		<View style={{alignItems: 'center'}}>
-		<Text style={styles.text}>Tus días en </Text>
-		<TouchableOpacity onPress={() => {setModalVisibleCountries(true);}}>
-		<Text style={[styles.text, {fontWeight: 'bold'} ]}>{COUNTRIES_DATA[userData.countryCode].name}</Text>
-		</TouchableOpacity>
-		<Modal
-		visible={modalVisibleCountries}
-		transparent={true}
-		animationType='fade'
-		onRequestClose={() => {setModalVisibleCountries(false);}}
-		>
-		<View style={{flex: 1, marginVertical: 15, marginHorizontal: 15, backgroundColor: 'white', borderRadius: 5, paddingHorizontal: 15, paddingVertical: 15}}>
-		<FlatList
-		data={COUNTRIES_DATA_ARRAY}
-		renderItem={renderItem}
-		keyExtractor={item => item.code}
-		initialNumToRender={50}
-		maxToRenderPerBatch={50}
-		/>
-		</View>
-		</Modal>
-		<Image style={styles.flag} source={COUNTRIES_DATA[userData.countryCode].source}/>
-		<View style={{flexDirection: 'row', alignItems: 'center'}}>
-		<Text style={styles.text}>{userData.days.toString()}/</Text>
-		<TextInput
-		style={[styles.text, {fontWeight: 'bold'} ]}
-		value={userData.maximumDays.toString()}
-		onChangeText={newMaximumDays => {
-			const regex = /[^\d]/g;
-
-			if (newMaximumDays == '') {
-				newMaximumDays = '0';
-			} else if (regex.test(newMaximumDays)) {
-				newMaximumDays = newMaximumDays.replace(regex, '');
-			}
-
-			newMaximumDays = parseInt(newMaximumDays);
-
-			storage.set(userData.countryCode, JSON.stringify({countryCode: userData.countryCode, days: userData.days, maximumDays: newMaximumDays})); 
-			setUserData({...userData, maximumDays: newMaximumDays});
-			load(userData.days, newMaximumDays);
-		}}
-		keyboardType={'number-pad'}
-		/>
-		</View>
-		<View>
-		<Text style={[styles.text, {fontSize: 15} ]}>{isFinite(Math.round(userData.days * 100 / userData.maximumDays)) ? Math.round(userData.days * 100 / userData.maximumDays) : 0}%</Text>
-		<View style={styles.progressBar}>
-		<Animated.View style={[StyleSheet.absoluteFill], {backgroundColor: '#8BED4F', width: loaderValue.interpolate({inputRange: [0,100], outputRange: ['0%','100%'], extrapolate: 'clamp'})}}/>
-		</View>
-		{/*<Text style={[styles.text, {fontSize: 15} ]}>Loading...</Text>*/}
-		</View>
-		</View>
-		</SafeAreaView>
-		</LinearGradient>
-	);
+		storage.set(userData.countryCode, JSON.stringify({countryCode: userData.countryCode, days: userData.days, maximumDays: newMaximumDays})); 
+		setUserData({...userData, maximumDays: newMaximumDays});
+		load(userData.days, newMaximumDays);
+	}}
+	keyboardType={'number-pad'}
+	/>
+	</View>
+	<View>
+	<Text style={[styles.text, {fontSize: 15} ]}>{isFinite(Math.round(userData.days * 100 / userData.maximumDays)) ? Math.round(userData.days * 100 / userData.maximumDays) : 0}%</Text>
+	<View style={styles.progressBar}>
+	<Animated.View style={[StyleSheet.absoluteFill], {backgroundColor: '#8BED4F', width: loaderValue.interpolate({inputRange: [0,100], outputRange: ['0%','100%'], extrapolate: 'clamp'})}}/>
+	</View>
+	{/*<Text style={[styles.text, {fontSize: 15} ]}>Loading...</Text>*/}
+	</View>
+	</View>
+	</SafeAreaView>
+	</LinearGradient>
+);
 };
 const styles = StyleSheet.create({
 	container: {
