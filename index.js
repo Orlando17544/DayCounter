@@ -12,6 +12,7 @@ export const storageNotifications = new MMKV({
 	id: `user-notifications-storage`
 })
 
+// Background events of notifications
 notifee.onBackgroundEvent(async ({ type, detail }) => {
 	if (type == EventType.PRESS) {
 		storageNotifications.set('notification', detail.notification.id);

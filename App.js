@@ -819,6 +819,38 @@ const App: () => Node = () => {
 	const [userData, setUserData] = useState(JSON.parse(storage.getString('AFG')));
 	const [modalVisibleCountries, setModalVisibleCountries] = useState(false);
 
+	// To display notifications (background or foreground)
+	async function onDisplayNotification(daysLeft, countryCode) {
+		// Request permissions (required for iOS)
+		await notifee.requestPermission()
+
+		// Create a channel (required for Android)
+		const channelId = await notifee.createChannel({
+			id: 'default',
+			name: 'Default Channel',
+			sound: 'default', // Default sound for Android
+		});
+
+		// Display a notification
+		await notifee.displayNotification({
+			id: countryCode,
+			title: 'Fatan ' + daysLeft + ' días',
+			body: 'Te faltan ' + daysLeft + ' días en ' + COUNTRIES_DATA[countryCode].name,
+			android: {
+				channelId,
+				smallIcon: 'ic_launcher', // optional, defaults to 'ic_launcher'.
+				// pressAction is needed if you want the notification to open the app when pressed
+				pressAction: {
+					id: 'default',
+				},
+			},
+			ios: {
+				sound: 'default', // Default sound for iOS
+			},
+		});
+	}
+	
+	// Save user data in storage
 	async function updateData(latitude, longitude) {
 		const coordinates = latitude + ',' + longitude;
 		const coordinatesEncoded = encodeURIComponent(coordinates);
@@ -848,7 +880,7 @@ const App: () => Node = () => {
 			   }*/
 	}
 	
-	//For positions that have been stored
+	// Save positions that have been stored in storage
 	async function updatePositionsData() {
 
 		const keysPositions = storagePositions.getAllKeys();
@@ -863,6 +895,7 @@ const App: () => Node = () => {
 		});
 	}
 
+	// Activates when internet is on to save positions
 	useEffect(() => {
 		const unsubscribe = NetInfo.addEventListener(state => {
 			if (state.isInternetReachable) {
@@ -878,6 +911,17 @@ const App: () => Node = () => {
 		};
 	}, []);
 
+	// Foreground events of notifications
+	useEffect(() => {
+		return notifee.onForegroundEvent(({ type, detail }) => {
+			switch (type) {
+				case EventType.PRESS:
+					setUserData(JSON.parse(storage.getString(detail.notification.id)));
+			}
+		});
+	}, []);
+
+	// Background events of notifications
 	const appState = useRef(AppState.currentState);
 	const [appStateVisible, setAppStateVisible] = useState(appState.current);
 
@@ -904,6 +948,7 @@ const App: () => Node = () => {
 		};
 	}, []);
 
+	// Permissions location
 	useEffect(() => {
 		async function askPermissionsAndroid() {
 			try {
@@ -933,8 +978,11 @@ const App: () => Node = () => {
 		} else {
 			askPermissionsAndroid();
 		}
+	}, []);
 
 
+	// Background tasks
+	useEffect(() => {
 		async function initBackgroundFetch() {
 			const onEvent = async (taskId) => {
 				console.log('[BackgroundFetch] task: ', taskId);
@@ -1000,15 +1048,7 @@ const App: () => Node = () => {
 
 		initBackgroundFetch();
 
-		return notifee.onForegroundEvent(({ type, detail }) => {
-			switch (type) {
-				case EventType.PRESS:
-					setUserData(JSON.parse(storage.getString(detail.notification.id)));
-			}
-		});
 	}, []);
-
-
 
 	const backgroundStyle = {
 		backgroundColor: isDarkMode ? '#222' : '#F3F3F3',
@@ -1016,6 +1056,7 @@ const App: () => Node = () => {
 
 	const isDarkMode = useColorScheme() === 'dark';
 
+	// Animations
 	const loaderValue = useRef(new Animated.Value(0)).current;
 
 	const load = (days, maximumDays) => {
@@ -1025,36 +1066,6 @@ const App: () => Node = () => {
 			useNativeDriver: false
 		}).start();
 	};
-
-	async function onDisplayNotification(daysLeft, countryCode) {
-		// Request permissions (required for iOS)
-		await notifee.requestPermission()
-
-		// Create a channel (required for Android)
-		const channelId = await notifee.createChannel({
-			id: 'default',
-			name: 'Default Channel',
-			sound: 'default',
-		});
-
-		// Display a notification
-		await notifee.displayNotification({
-			id: countryCode,
-			title: 'Fatan ' + daysLeft + ' días',
-			body: 'Te faltan ' + daysLeft + ' días en ' + COUNTRIES_DATA[countryCode].name,
-			android: {
-				channelId,
-				smallIcon: 'ic_launcher', // optional, defaults to 'ic_launcher'.
-				// pressAction is needed if you want the notification to open the app when pressed
-				pressAction: {
-					id: 'default',
-				},
-			},
-			ios: {
-				sound: 'default',
-			},
-		});
-	}
 
 	const renderItem = ({ item }) => (
 		<TouchableOpacity key={item.code} style={{paddingBottom: 8}} onPress={() => {setUserData(JSON.parse(storage.getString(item.code))); setModalVisibleCountries(false); load(JSON.parse(storage.getString(item.code)).days, JSON.parse(storage.getString(item.code)).maximumDays);}}>
