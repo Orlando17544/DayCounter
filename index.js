@@ -8,6 +8,8 @@ import App from './App';
 import {name as appName} from './app.json';
 import { MMKV } from 'react-native-mmkv';
 import BackgroundFetch from "react-native-background-fetch";
+import Geolocation from 'react-native-geolocation-service';
+import { storagePositions } from './App.js';
 
 export const storageNotifications = new MMKV({
 	id: `user-notifications-storage`
@@ -23,6 +25,7 @@ notifee.onBackgroundEvent(async ({ type, detail }) => {
 	}
 });
 
+// To store positions in background
 let MyHeadlessTask = async (event) => {
 	// Get task id from event {}:
 	let taskId = event.taskId;
@@ -36,12 +39,23 @@ let MyHeadlessTask = async (event) => {
 	}
 	console.log('[BackgroundFetch HeadlessTask] start: ', taskId);
 
-	// Perform an example HTTP request.
-	// Important:  await asychronous tasks when using HeadlessJS.
-	let response = await fetch('https://reactnative.dev/movies.json');
-	let responseJson = await response.json();
-	console.log('[BackgroundFetch HeadlessTask] response: ', responseJson);
+	async function storeData(latitude, longitude, millisecondsDate) {
+		storagePositions.set(millisecondsDate.toString(), JSON.stringify({latitude: latitude, longitude: longitude}));
+	}
+	//For current location
+	Geolocation.getCurrentPosition(
+		(position) => {
+			const latitude = position.coords.latitude;
+			const longitude = position.coords.longitude;
 
+			storeData(latitude, longitude, Date.now());
+		},
+		(error) => {
+			// See error code charts below.
+			console.log(error.code, error.message);
+		},
+		{ enableHighAccuracy: true, maximumAge: 1, distanceFilter: 1 }
+	);
 	// Required:  Signal to native code that your task is complete.
 	// If you don't do this, your app could be terminated and/or assigned
 	// battery-blame for consuming too much time in background.
@@ -49,6 +63,6 @@ let MyHeadlessTask = async (event) => {
 }
 
 // Register your BackgroundFetch HeadlessTask
-//BackgroundFetch.registerHeadlessTask(MyHeadlessTask);
+BackgroundFetch.registerHeadlessTask(MyHeadlessTask);
 
 AppRegistry.registerComponent(appName, () => App);
