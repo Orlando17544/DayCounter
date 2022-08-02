@@ -883,6 +883,10 @@ const App: () => Node = () => {
 	async function updatePositionsData() {
 		let millisecondsDatesKeys = storagePositions.getAllKeys();
 
+		if (millisecondsDatesKeys.length < 2) {
+			return;
+		}
+
 		let millisecondsDatesKeysIntegers = millisecondsDatesKeys.map(millisecondsDateKey => {
 			return parseInt(millisecondsDateKey, 10);
 		});
@@ -907,11 +911,14 @@ const App: () => Node = () => {
 // Activates when internet is on to update data
 useEffect(() => {
 	const unsubscribe = NetInfo.addEventListener(state => {
+		var timeoutId;
 		if (state.isInternetReachable) {
 			console.log('internet is on');
-			updatePositionsData();
+			clearTimeout(timeoutId);
+			timeoutId = setTimeout(updatePositionsData, 5000);
 		} else {
 			console.log('internet is off');
+			clearTimeout(timeoutId);
 		}
 	});
 
