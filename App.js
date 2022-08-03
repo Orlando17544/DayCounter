@@ -829,7 +829,8 @@ const App: () => Node = () => {
 			body: 'Te faltan ' + daysLeft + ' días en ' + COUNTRIES_DATA[countryCode].name,
 			android: {
 				channelId,
-				smallIcon: 'ic_launcher', // optional, defaults to 'ic_launcher'.
+				smallIcon: 'ic_small_icon', // optional, defaults to 'ic_launcher'.
+				color: '#00b0ff',
 				// pressAction is needed if you want the notification to open the app when pressed
 				pressAction: {
 					id: 'default',
@@ -842,7 +843,7 @@ const App: () => Node = () => {
 	}
 
 	// Save user data in storage
-	async function updateData(latitude, longitude, timeElapsedDays) {
+	async function updatePositionData(latitude, longitude, timeElapsedDays) {
 		const coordinates = latitude + ',' + longitude;
 		const coordinatesEncoded = encodeURIComponent(coordinates);
 
@@ -891,7 +892,7 @@ const App: () => Node = () => {
 			const latitude = position.latitude;
 			const longitude = position.longitude;
 
-			updateData(latitude, longitude, timeElapsedDays);
+			updatePositionData(latitude, longitude, timeElapsedDays);
 			storagePositions.delete(millisecondsDatesKeysIntegers[i].toString());
 		}
 	};
