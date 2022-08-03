@@ -29,13 +29,11 @@ import {
 } from 'react-native';
 
 import LinearGradient from 'react-native-linear-gradient';
-
 import BackgroundFetch from 'react-native-background-fetch';
-
 import { MMKV } from 'react-native-mmkv';
-
 import Geolocation from 'react-native-geolocation-service';
-
+import NetInfo from "@react-native-community/netinfo";
+import notifee, { EventType } from '@notifee/react-native';
 const axios = require('axios').default;
 
 export const storage = new MMKV({
@@ -47,15 +45,9 @@ export const storagePositions = new MMKV({
 })
 
 import { storageNotifications } from './index.js';
-
-import NetInfo from "@react-native-community/netinfo";
-
-import notifee, { EventType } from '@notifee/react-native';
-
 import API_KEY_here from './API_KEY_here.js';
 
-const FRECUENCY_HOURS = 1 / 4;
-
+const FRECUENCY_HOURS = 1;
 const DAYS_LEFT_NOTIFY = 1;
 
 if (storage.getAllKeys().length == 0) {
@@ -912,7 +904,7 @@ const App: () => Node = () => {
 			if (state.isInternetReachable) {
 				console.log('internet is on');
 				clearTimeout(timeoutId);
-				timeoutId = setTimeout(updatePositionsData, 5000);
+				timeoutId = setTimeout(updatePositionsData, 10000);
 			} else {
 				console.log('internet is off');
 				clearTimeout(timeoutId);
@@ -992,6 +984,33 @@ const App: () => Node = () => {
 		}
 	}, []);
 
+	// Background task
+	async function backgroundTask() {
+		async function storeData(latitude, longitude, millisecondsDate) {
+			storagePositions.set(millisecondsDate.toString(), JSON.stringify({latitude: latitude, longitude: longitude}));
+		}
+
+		//For current location
+		Geolocation.getCurrentPosition(
+			(position) => {
+				const latitude = position.coords.latitude;
+				const longitude = position.coords.longitude;
+
+				storeData(latitude, longitude, Date.now());
+			},
+			(error) => {
+				// See error code charts below.
+				console.log(error.code, error.message);
+			},
+			{ enableHighAccuracy: true, maximumAge: 1, distanceFilter: 1 }
+		);
+		
+		const state = await NetInfo.fetch();
+
+		if (state.isInternetReachable) {
+			updatePositionsData();
+		}
+	}
 
 	// Background tasks
 	useEffect(() => {
@@ -999,23 +1018,9 @@ const App: () => Node = () => {
 			const onEvent = async (taskId) => {
 				console.log('[BackgroundFetch] task: ', taskId);
 				// Do your background work...
-				async function storeData(latitude, longitude, millisecondsDate) {
-					storagePositions.set(millisecondsDate.toString(), JSON.stringify({latitude: latitude, longitude: longitude}));
-				}
-				//For current location
-				Geolocation.getCurrentPosition(
-					(position) => {
-						const latitude = position.coords.latitude;
-						const longitude = position.coords.longitude;
+				
+				await backgroundTask();	
 
-						storeData(latitude, longitude, Date.now());
-					},
-					(error) => {
-						// See error code charts below.
-						console.log(error.code, error.message);
-					},
-					{ enableHighAccuracy: true, maximumAge: 1, distanceFilter: 1 }
-				);
 				// IMPORTANT:  You must signal to the OS that your task is complete.
 				BackgroundFetch.finish(taskId);
 			}
