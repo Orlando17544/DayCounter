@@ -6,6 +6,15 @@
  * @flow strict-local
  */
 
+/*
+Para saber cuantos días faltan antes de que se acabe el año:
+
+const currentDate = new Date();
+const currentYear = currentDate.getFullYear();
+const endYear = new Date(currentYear, 11, 31);
+const daysLeft = (endYear.getTime() - currentDate.getTime()) * 1.15741 * Math.pow(10, -8);
+*/
+
 import React, { useState, useEffect, useRef } from 'react';
 import type {Node} from 'react';
 import {
@@ -1072,6 +1081,8 @@ const App: () => Node = () => {
 		</TouchableOpacity>
 	);
 
+	/*
+
 	return (
 		<LinearGradient style={styles.container} colors={['#1e2818', '#020304']}>
 		<SafeAreaView>
@@ -1126,13 +1137,53 @@ const App: () => Node = () => {
 		<View style={styles.progressBar}>
 		<Animated.View style={[StyleSheet.absoluteFill], {backgroundColor: '#8BED4F', width: loaderValue.interpolate({inputRange: [0,100], outputRange: ['0%','100%'], extrapolate: 'clamp'})}}/>
 		</View>
-		{/*<Text style={[styles.text, {fontSize: 15} ]}>Loading...</Text>*/}
 		</View>
 		</View>
 		</SafeAreaView>
 		</LinearGradient>
+	);*/
+
+	return (
+		<SafeAreaView>
+		<StatusBar barStyle={isDarkMode ? 'light-content' : 'dark-content'} />
+		<View style={{justifyContent: 'center'}}>
+			<Text style={{fontWeight: 'bold', fontSize: 15, marginHorizontal: 10, marginVertical: 15, color: 'black'}}>Lista de objetivos: </Text>
+			<View style={{flexDirection: 'row', marginHorizontal: 10}}>
+			<Text style={{flex: 1, fontWeight: 'bold', fontSize: 15, marginVertical: 10, color: 'black'}}>País</Text>
+			<Text style={{flex: 1, fontWeight: 'bold', fontSize: 15, marginVertical: 10, color: 'black'}}>Dias</Text>
+			</View>
+			<View style={{flexDirection: 'row', marginHorizontal: 10, paddingVertical: 5}}>
+				<TextInput style={{flex: 1, paddingVertical: 5, backgroundColor: '#78909c', borderBottomWidth: 2, borderRadius: 5}} value={'España'}/>
+				<TextInput style={{flex: 1, paddingVertical: 5, backgroundColor: '#78909c', borderBottomWidth: 2, borderRadius: 5}} value={'25'} />
+			</View>
+			<View style={{flexDirection: 'row', marginHorizontal: 10, paddingVertical: 5}}>
+				<TextInput style={{flex: 1, paddingVertical: 5, backgroundColor: '#78909c', borderBottomWidth: 2, borderRadius: 5}} value={'Francia'}/>
+				<TextInput style={{flex: 1, paddingVertical: 5, backgroundColor: '#78909c', borderBottomWidth: 2, borderRadius: 5}} value={'35'} />
+			</View>
+			<View style={{flexDirection: 'row', marginHorizontal: 10, paddingVertical: 5}}>
+				<TextInput style={{flex: 1, paddingVertical: 5, backgroundColor: '#78909c', borderBottomWidth: 2, borderRadius: 5}} value={'Colombia'}/>
+				<TextInput style={{flex: 1, paddingVertical: 5, backgroundColor: '#78909c', borderBottomWidth: 2, borderRadius: 5}} value={'45'} />
+			</View>
+			<View style={{flexDirection: 'row', marginHorizontal: 10, paddingVertical: 5}}>
+				<TextInput style={{flex: 1, paddingVertical: 5, backgroundColor: '#78909c', borderBottomWidth: 2, borderRadius: 5}} value={'Nueva Zelanda'}/>
+				<TextInput style={{flex: 1, paddingVertical: 5, backgroundColor: '#78909c', borderBottomWidth: 2, borderRadius: 5}} value={'60'} />
+			</View>
+			<View style={{flexDirection: 'row', marginHorizontal: 10, paddingVertical: 5}}>
+				<TextInput style={{flex: 1, paddingVertical: 5, backgroundColor: '#78909c', borderBottomWidth: 2, borderRadius: 5}} value={'Argelia'}/>
+				<TextInput style={{flex: 1, paddingVertical: 5, backgroundColor: '#78909c', borderBottomWidth: 2, borderRadius: 5}} value={'70'} />
+			</View>
+			<View style={{flexDirection: 'row', marginHorizontal: 10, paddingVertical: 5}}>
+				<TextInput style={{flex: 1, paddingVertical: 5, backgroundColor: '#78909c', borderBottomWidth: 2, borderRadius: 5}} value={'China'}/>
+				<TextInput style={{flex: 1, paddingVertical: 5, backgroundColor: '#78909c', borderBottomWidth: 2, borderRadius: 5}} value={'25'} />
+			</View>
+			<TouchableOpacity style={{paddingVertical: 10, backgroundColor: '#536dfe', borderRadius: 5, marginHorizontal: 10, marginVertical: 10, alignItems: 'center'}}>
+				<Text style={{fontWeight: 'bold', fontSize: 15}}>Guardar</Text>
+			</TouchableOpacity>
+		</View>
+		</SafeAreaView>
 	);
 };
+
 const styles = StyleSheet.create({
 	container: {
 		flex: 1,
