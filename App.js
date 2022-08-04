@@ -906,6 +906,47 @@ const App: () => Node = () => {
 		}
 	};
 
+	async function initUpdate() {
+		let millisecondsDatesKeys = storagePositions.getAllKeys();
+		let millisecondsNow = Date.now();
+
+		if (millisecondsDatesKeys.length == 1) {
+			const hoursElapsed = (millisecondsNow - parseInt(millisecondsDatesKeys[0], 10)) * 2.77778 * Math.pow(10, -7);
+
+			// At least one hour should have elapsed
+			if (hoursElapsed >= 1) {
+				Geolocation.getCurrentPosition(
+					(position) => {
+						const latitude = position.coords.latitude;
+						const longitude = position.coords.longitude;
+
+						storeData(latitude, longitude, millisecondsNow);
+					},
+					(error) => {
+						// See error code charts below.
+						console.log(error.code, error.message);
+					},
+					{ enableHighAccuracy: true, maximumAge: 1, distanceFilter: 1 }
+				);
+			}
+		} else if (millisecondsDatesKeys.length == 0) {
+				Geolocation.getCurrentPosition(
+					(position) => {
+						const latitude = position.coords.latitude;
+						const longitude = position.coords.longitude;
+
+						storeData(latitude, longitude, millisecondsNow);
+					},
+					(error) => {
+						// See error code charts below.
+						console.log(error.code, error.message);
+					},
+					{ enableHighAccuracy: true, maximumAge: 1, distanceFilter: 1 }
+				);
+		}
+		updatePositionsData();
+	};
+
 
 	// Activates when internet is on to update data
 	useEffect(() => {
@@ -914,7 +955,7 @@ const App: () => Node = () => {
 			if (state.isInternetReachable) {
 				console.log('internet is on');
 				clearTimeout(timeoutId);
-				timeoutId = setTimeout(updatePositionsData, 10000);
+				timeoutId = setTimeout(initUpdate, 10000);
 			} else {
 				console.log('internet is off');
 				clearTimeout(timeoutId);
@@ -994,11 +1035,12 @@ const App: () => Node = () => {
 		}
 	}, []);
 
+	async function storeData(latitude, longitude, millisecondsDate) {
+		storagePositions.set(millisecondsDate.toString(), JSON.stringify({latitude: latitude, longitude: longitude}));
+	}
+	
 	// Background task
 	async function backgroundTask() {
-		async function storeData(latitude, longitude, millisecondsDate) {
-			storagePositions.set(millisecondsDate.toString(), JSON.stringify({latitude: latitude, longitude: longitude}));
-		}
 
 		//For current location
 		Geolocation.getCurrentPosition(
@@ -1081,8 +1123,6 @@ const App: () => Node = () => {
 		</TouchableOpacity>
 	);
 
-	/*
-
 	return (
 		<LinearGradient style={styles.container} colors={['#1e2818', '#020304']}>
 		<SafeAreaView>
@@ -1141,8 +1181,9 @@ const App: () => Node = () => {
 		</View>
 		</SafeAreaView>
 		</LinearGradient>
-	);*/
-
+	);
+	
+	/*
 	return (
 		<SafeAreaView>
 		<StatusBar barStyle={isDarkMode ? 'light-content' : 'dark-content'} />
@@ -1182,6 +1223,7 @@ const App: () => Node = () => {
 		</View>
 		</SafeAreaView>
 	);
+	*/
 };
 
 const styles = StyleSheet.create({
