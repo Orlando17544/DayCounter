@@ -59,6 +59,7 @@ import API_KEY_here from './API_KEY_here.js';
 const FRECUENCY_HOURS = 1;
 const DAYS_LEFT_NOTIFY = 1;
 
+
 if (storage.getAllKeys().length == 0) {
 	storage.set('AFG', JSON.stringify({countryCode: 'AFG', days: 0, maximumDays: 0}));
 	storage.set('ALA', JSON.stringify({countryCode: 'ALA', days: 0, maximumDays: 0}));
@@ -819,6 +820,25 @@ const App: () => Node = () => {
 	const [userData, setUserData] = useState(JSON.parse(storage.getString('AFG')));
 	const [modalVisibleCountries, setModalVisibleCountries] = useState(false);
 
+	// At the beginning there is no positions
+	useEffect(() => {
+		if (storagePositions.getAllKeys().length == 0) {
+			Geolocation.getCurrentPosition(
+				(position) => {
+					const latitude = position.coords.latitude;
+					const longitude = position.coords.longitude;
+
+					storePositionData(latitude, longitude, Date.now());
+				},
+				(error) => {
+					// See error code charts below.
+					console.log(error.code, error.message);
+				},
+				{ enableHighAccuracy: true, maximumAge: 1, distanceFilter: 1 }
+			);
+		}
+	}, []);
+
 	// To display notifications (background or foreground)
 	async function onDisplayNotification(daysLeft, countryCode) {
 		// Request permissions (required for iOS)
@@ -920,7 +940,7 @@ const App: () => Node = () => {
 						const latitude = position.coords.latitude;
 						const longitude = position.coords.longitude;
 
-						storeData(latitude, longitude, millisecondsNow);
+						storePositionData(latitude, longitude, millisecondsNow);
 					},
 					(error) => {
 						// See error code charts below.
@@ -929,21 +949,7 @@ const App: () => Node = () => {
 					{ enableHighAccuracy: true, maximumAge: 1, distanceFilter: 1 }
 				);
 			}
-		} else if (millisecondsDatesKeys.length == 0) {
-				Geolocation.getCurrentPosition(
-					(position) => {
-						const latitude = position.coords.latitude;
-						const longitude = position.coords.longitude;
-
-						storeData(latitude, longitude, millisecondsNow);
-					},
-					(error) => {
-						// See error code charts below.
-						console.log(error.code, error.message);
-					},
-					{ enableHighAccuracy: true, maximumAge: 1, distanceFilter: 1 }
-				);
-		}
+		} 
 		updatePositionsData();
 	};
 
@@ -1035,7 +1041,7 @@ const App: () => Node = () => {
 		}
 	}, []);
 
-	async function storeData(latitude, longitude, millisecondsDate) {
+	async function storePositionData(latitude, longitude, millisecondsDate) {
 		storagePositions.set(millisecondsDate.toString(), JSON.stringify({latitude: latitude, longitude: longitude}));
 	}
 	
@@ -1048,7 +1054,7 @@ const App: () => Node = () => {
 				const latitude = position.coords.latitude;
 				const longitude = position.coords.longitude;
 
-				storeData(latitude, longitude, Date.now());
+				storePositionData(latitude, longitude, Date.now());
 			},
 			(error) => {
 				// See error code charts below.
