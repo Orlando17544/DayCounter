@@ -859,7 +859,7 @@ const App: () => Node = () => {
 			android: {
 				channelId,
 				smallIcon: 'ic_small_icon', // optional, defaults to 'ic_launcher'.
-				color: '#00b0ff',
+				color: '#df3500',
 				// pressAction is needed if you want the notification to open the app when pressed
 				pressAction: {
 					id: 'default',
