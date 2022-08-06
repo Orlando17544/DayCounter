@@ -21,6 +21,8 @@ import {
 import { NavigationContainer } from '@react-navigation/native';
 import { createNativeStackNavigator } from '@react-navigation/native-stack';
 
+const Stack = createNativeStackNavigator();
+
 import { MMKV } from 'react-native-mmkv';
 
 export const storageOnboarding = new MMKV({
@@ -33,7 +35,9 @@ import HomeScreen from './src/views/screens/HomeScreen.js';
 export default function App() {
 	return (
 		<NavigationContainer>
-		<Stack.Navigator initialRouteName={storageOnboarding.getAllKeys().length == 0 ? "OnBoarding" : "Home"}>
+		<Stack.Navigator 
+		initialRouteName={storageOnboarding.getAllKeys().length == 0 ? "OnBoarding" : "Home"} 
+		screenOptions={{headerShown: false}}>
 		<Stack.Screen name="OnBoarding" component={OnBoardingScreen} />
 		<Stack.Screen name="Home" component={HomeScreen} />
 		</Stack.Navigator>
