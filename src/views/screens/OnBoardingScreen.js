@@ -42,6 +42,7 @@ const data = [
 
 const OnBoardingScreen: () => Node = ({ navigation }) => {
 	const fadeAnim = useRef(new Animated.Value(0)).current;
+	const fadeAnim2 = useRef(new Animated.Value(0)).current;
 
 	const fadeIn = () => {
 		Animated.timing(fadeAnim, {
@@ -50,12 +51,27 @@ const OnBoardingScreen: () => Node = ({ navigation }) => {
 		}).start();
 	};
 
-	
+
 
 	return (
-		<AnimatedPagerView style={{flex: 1}} initialPage={0}>
+		<AnimatedPagerView style={{flex: 1}} initialPage={0} onPageScroll={Animated.event(
+			[
+				{
+					nativeEvent: {
+						offset: fadeAnim,
+						position: fadeAnim2
+					},
+				},
+			],
+			{
+				listener: ({ nativeEvent: { offset, position } }) => {
+					console.log(`Position: ${position} Offset: ${offset}`);
+				},
+				useNativeDriver: true,
+			}
+		)}>
 		{data.map((item, index) => (
-			<View style={{flex: 1}} key="1" collapsable={false}>
+			<View style={{flex: 1}} key={index} collapsable={false}>
 			<ImageBackground style={{width: windowWidth, height: windowHeight, justifyContent: 'flex-end', alignItems: 'center'}} resizeMode='stretch' source={item.image}>
 			<View style={{flexDirection: 'row', justifyContent: 'center', alignItems: 'center', marginBottom: windowWidth * 0.15}}>
 			<View style={{width: windowWidth * 0.05, height: windowWidth * 0.05, backgroundColor: '#1e2818', borderRadius: windowWidth * 0.04, marginHorizontal: 5}}/>
