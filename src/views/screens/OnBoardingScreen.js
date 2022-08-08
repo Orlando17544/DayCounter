@@ -25,66 +25,49 @@ import {
 import { MMKV } from 'react-native-mmkv';
 import PagerView from 'react-native-pager-view';
 
+const AnimatedPagerView = Animated.createAnimatedComponent(PagerView);
+
 import { storageOnboarding } from './../../../App.js';
 
 const windowWidth = Dimensions.get('window').width;
 const windowHeight = Dimensions.get('window').height;
 
+const data = [
+	{image: require('./../../../assets/tutorial1.png')},
+	{image: require('./../../../assets/tutorial2.png')},
+	{image: require('./../../../assets/tutorial3.png')},
+	{image: require('./../../../assets/tutorial4.png')},
+	{image: require('./../../../assets/tutorial5.png')},
+];
+
 const OnBoardingScreen: () => Node = ({ navigation }) => {
+	const fadeAnim = useRef(new Animated.Value(0)).current;
+
+	const fadeIn = () => {
+		Animated.timing(fadeAnim, {
+			toValue: 1,
+			duration: 5000
+		}).start();
+	};
+
+	
+
 	return (
-		<PagerView style={{flex: 1}} initialPage={0}>
-		<View style={{flex: 1}} key="1" collapsable={false}>
-		<ImageBackground style={{width: windowWidth, height: windowHeight, justifyContent: 'flex-end', alignItems: 'center'}} resizeMode='stretch' source={require('./../../../assets/tutorial1.png')}>
-		<View style={{flexDirection: 'row', justifyContent: 'center', alignItems: 'center', marginBottom: windowWidth * 0.15}}>
-		<View style={{width: windowWidth * 0.05, height: windowWidth * 0.05, backgroundColor: '#1e2818', borderRadius: windowWidth * 0.04, marginHorizontal: 5}}/>
-		<View style={{width: windowWidth * 0.04, height: windowWidth * 0.04, backgroundColor: '#1e2818', borderRadius: windowWidth * 0.04, marginHorizontal: 5, opacity: 0.5}}/>
-		<View style={{width: windowWidth * 0.04, height: windowWidth * 0.04, backgroundColor: '#1e2818', borderRadius: windowWidth * 0.04, marginHorizontal: 5, opacity: 0.5}}/>
-		<View style={{width: windowWidth * 0.04, height: windowWidth * 0.04, backgroundColor: '#1e2818', borderRadius: windowWidth * 0.04, marginHorizontal: 5, opacity: 0.5}}/>
-		<View style={{width: windowWidth * 0.04, height: windowWidth * 0.04, backgroundColor: '#1e2818', borderRadius: windowWidth * 0.04, marginHorizontal: 5, opacity: 0.5}}/>
-		</View>
-		</ImageBackground>
-		</View>
-		<View style={{flex: 1}} key="2" collapsable={false}>
-		<ImageBackground style={{width: windowWidth, height: windowHeight, justifyContent: 'flex-end', alignItems: 'center'}} resizeMode='stretch' source={require('./../../../assets/tutorial2.png')}>
-		<View style={{flexDirection: 'row', justifyContent: 'center', alignItems: 'center', marginBottom: windowWidth * 0.15}}>
-		<View style={{width: windowWidth * 0.04, height: windowWidth * 0.04, backgroundColor: '#1e2818', borderRadius: windowWidth * 0.04, marginHorizontal: 5, opacity: 0.5}}/>
-		<View style={{width: windowWidth * 0.05, height: windowWidth * 0.05, backgroundColor: '#1e2818', borderRadius: windowWidth * 0.04, marginHorizontal: 5}}/>
-		<View style={{width: windowWidth * 0.04, height: windowWidth * 0.04, backgroundColor: '#1e2818', borderRadius: windowWidth * 0.04, marginHorizontal: 5, opacity: 0.5}}/>
-		<View style={{width: windowWidth * 0.04, height: windowWidth * 0.04, backgroundColor: '#1e2818', borderRadius: windowWidth * 0.04, marginHorizontal: 5, opacity: 0.5}}/>
-		<View style={{width: windowWidth * 0.04, height: windowWidth * 0.04, backgroundColor: '#1e2818', borderRadius: windowWidth * 0.04, marginHorizontal: 5, opacity: 0.5}}/>
-		</View>
-		</ImageBackground>
-		</View>
-		<View style={{flex: 1}} key="3" collapsable={false}>
-		<ImageBackground style={{width: windowWidth, height: windowHeight, justifyContent: 'flex-end', alignItems: 'center'}} resizeMode='stretch' source={require('./../../../assets/tutorial3.png')}>
-		<View style={{flexDirection: 'row', justifyContent: 'center', alignItems: 'center', marginBottom: windowWidth * 0.15}}>
-		<View style={{width: windowWidth * 0.04, height: windowWidth * 0.04, backgroundColor: '#1e2818', borderRadius: windowWidth * 0.04, marginHorizontal: 5, opacity: 0.5}}/>
-		<View style={{width: windowWidth * 0.04, height: windowWidth * 0.04, backgroundColor: '#1e2818', borderRadius: windowWidth * 0.04, marginHorizontal: 5, opacity: 0.5}}/>
-		<View style={{width: windowWidth * 0.05, height: windowWidth * 0.05, backgroundColor: '#1e2818', borderRadius: windowWidth * 0.04, marginHorizontal: 5}}/>
-		<View style={{width: windowWidth * 0.04, height: windowWidth * 0.04, backgroundColor: '#1e2818', borderRadius: windowWidth * 0.04, marginHorizontal: 5, opacity: 0.5}}/>
-		<View style={{width: windowWidth * 0.04, height: windowWidth * 0.04, backgroundColor: '#1e2818', borderRadius: windowWidth * 0.04, marginHorizontal: 5, opacity: 0.5}}/>
-		</View>
-		</ImageBackground>
-		</View>
-		<View style={{flex: 1}} key="4" collapsable={false}>
-		<ImageBackground style={{width: windowWidth, height: windowHeight, justifyContent: 'flex-end', alignItems: 'center'}} resizeMode='stretch' source={require('./../../../assets/tutorial4.png')}>
-		<View style={{flexDirection: 'row', justifyContent: 'center', alignItems: 'center', marginBottom: windowWidth * 0.15}}>
-		<View style={{width: windowWidth * 0.04, height: windowWidth * 0.04, backgroundColor: '#1e2818', borderRadius: windowWidth * 0.04, marginHorizontal: 5, opacity: 0.5}}/>
-		<View style={{width: windowWidth * 0.04, height: windowWidth * 0.04, backgroundColor: '#1e2818', borderRadius: windowWidth * 0.04, marginHorizontal: 5, opacity: 0.5}}/>
-		<View style={{width: windowWidth * 0.04, height: windowWidth * 0.04, backgroundColor: '#1e2818', borderRadius: windowWidth * 0.04, marginHorizontal: 5, opacity: 0.5}}/>
-		<View style={{width: windowWidth * 0.05, height: windowWidth * 0.05, backgroundColor: '#1e2818', borderRadius: windowWidth * 0.04, marginHorizontal: 5}}/>
-		<View style={{width: windowWidth * 0.04, height: windowWidth * 0.04, backgroundColor: '#1e2818', borderRadius: windowWidth * 0.04, marginHorizontal: 5, opacity: 0.5}}/>
-		</View>
-		</ImageBackground>
-		</View>
-		<View style={{flex: 1}} key="5" collapsable={false}>
-		<ImageBackground style={{width: windowWidth, height: windowHeight, justifyContent: 'flex-end', alignItems: 'center'}} resizeMode='stretch' source={require('./../../../assets/tutorial5.png')}>
-		<TouchableOpacity style={{backgroundColor: '#1e2818', paddingVertical: 10, paddingHorizontal: windowWidth * 0.1, borderRadius: 5, marginBottom: windowWidth * 0.15}} onPress={() => {storageOnboarding.set('isFirstTime', true); navigation.navigate('Home');}}>
-		<Text style={{color: 'white', fontSize: 15, fontWeight: 'bold'}}>Empezar</Text>
-		</TouchableOpacity>
-		</ImageBackground>
-		</View>
-		</PagerView>
+		<AnimatedPagerView style={{flex: 1}} initialPage={0}>
+		{data.map((item, index) => (
+			<View style={{flex: 1}} key="1" collapsable={false}>
+			<ImageBackground style={{width: windowWidth, height: windowHeight, justifyContent: 'flex-end', alignItems: 'center'}} resizeMode='stretch' source={item.image}>
+			<View style={{flexDirection: 'row', justifyContent: 'center', alignItems: 'center', marginBottom: windowWidth * 0.15}}>
+			<View style={{width: windowWidth * 0.05, height: windowWidth * 0.05, backgroundColor: '#1e2818', borderRadius: windowWidth * 0.04, marginHorizontal: 5}}/>
+			<View style={{width: windowWidth * 0.04, height: windowWidth * 0.04, backgroundColor: '#1e2818', borderRadius: windowWidth * 0.04, marginHorizontal: 5, opacity: 0.5}}/>
+			<View style={{width: windowWidth * 0.04, height: windowWidth * 0.04, backgroundColor: '#1e2818', borderRadius: windowWidth * 0.04, marginHorizontal: 5, opacity: 0.5}}/>
+			<View style={{width: windowWidth * 0.04, height: windowWidth * 0.04, backgroundColor: '#1e2818', borderRadius: windowWidth * 0.04, marginHorizontal: 5, opacity: 0.5}}/>
+			<View style={{width: windowWidth * 0.04, height: windowWidth * 0.04, backgroundColor: '#1e2818', borderRadius: windowWidth * 0.04, marginHorizontal: 5, opacity: 0.5}}/>
+			</View>
+			</ImageBackground>
+			</View>
+		))}
+		</AnimatedPagerView>
 	);
 };
 
