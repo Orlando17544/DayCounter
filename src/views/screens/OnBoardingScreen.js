@@ -19,7 +19,7 @@ import {
 	TouchableOpacity,
 	Animated,
 	Dimensions,
-	ImageBackground
+	Image
 } from 'react-native';
 
 import { MMKV } from 'react-native-mmkv';
@@ -32,61 +32,80 @@ import { storageOnboarding } from './../../../App.js';
 const windowWidth = Dimensions.get('window').width;
 const windowHeight = Dimensions.get('window').height;
 
-const data = [
-	{image: require('./../../../assets/tutorial1.png')},
-	{image: require('./../../../assets/tutorial2.png')},
-	{image: require('./../../../assets/tutorial3.png')},
-	{image: require('./../../../assets/tutorial4.png')},
-	{image: require('./../../../assets/tutorial5.png')},
+const images = [
+	{imageUri: require('./../../../assets/tutorial1.png')},
+	{imageUri: require('./../../../assets/tutorial2.png')},
+	{imageUri: require('./../../../assets/tutorial3.png')},
+	{imageUri: require('./../../../assets/tutorial4.png')},
+	{imageUri: require('./../../../assets/tutorial5.png')},
 ];
 
 const OnBoardingScreen: () => Node = ({ navigation }) => {
-	const fadeAnim = useRef(new Animated.Value(0)).current;
-	const fadeAnim2 = useRef(new Animated.Value(0)).current;
+	const [isLastPage, setIsLastPage] = useState(false);
 
-	const fadeIn = () => {
-		Animated.timing(fadeAnim, {
-			toValue: 1,
-			duration: 5000
-		}).start();
-	};
-
-
+	const offset = useRef(new Animated.Value(0)).current;
+	const position = useRef(new Animated.Value(0)).current;
 
 	return (
+		<View style={{flex: 1, justifyContent: 'flex-end'}}>
 		<AnimatedPagerView style={{flex: 1}} initialPage={0} onPageScroll={Animated.event(
 			[
 				{
 					nativeEvent: {
-						offset: fadeAnim,
-						position: fadeAnim2
+						offset: offset,
+						position: position
 					},
 				},
 			],
 			{
 				listener: ({ nativeEvent: { offset, position } }) => {
 					console.log(`Position: ${position} Offset: ${offset}`);
+					if (position == images.length - 1 && !isLastPage) {
+						setIsLastPage(true);
+					} else if (isLastPage) {
+						setIsLastPage(false);
+					}
 				},
 				useNativeDriver: true,
 			}
 		)}>
-		{data.map((item, index) => (
+		{images.map((image, index) => (
 			<View style={{flex: 1}} key={index} collapsable={false}>
-			<ImageBackground style={{width: windowWidth, height: windowHeight, justifyContent: 'flex-end', alignItems: 'center'}} resizeMode='stretch' source={item.image}>
-			<View style={{flexDirection: 'row', justifyContent: 'center', alignItems: 'center', marginBottom: windowWidth * 0.15}}>
-			<View style={{width: windowWidth * 0.05, height: windowWidth * 0.05, backgroundColor: '#1e2818', borderRadius: windowWidth * 0.04, marginHorizontal: 5}}/>
-			<View style={{width: windowWidth * 0.04, height: windowWidth * 0.04, backgroundColor: '#1e2818', borderRadius: windowWidth * 0.04, marginHorizontal: 5, opacity: 0.5}}/>
-			<View style={{width: windowWidth * 0.04, height: windowWidth * 0.04, backgroundColor: '#1e2818', borderRadius: windowWidth * 0.04, marginHorizontal: 5, opacity: 0.5}}/>
-			<View style={{width: windowWidth * 0.04, height: windowWidth * 0.04, backgroundColor: '#1e2818', borderRadius: windowWidth * 0.04, marginHorizontal: 5, opacity: 0.5}}/>
-			<View style={{width: windowWidth * 0.04, height: windowWidth * 0.04, backgroundColor: '#1e2818', borderRadius: windowWidth * 0.04, marginHorizontal: 5, opacity: 0.5}}/>
-			</View>
-			</ImageBackground>
+			<Image style={{width: windowWidth, height: windowHeight, justifyContent: 'flex-end', alignItems: 'center'}} resizeMode='stretch' source={image.imageUri}>
+			</Image>
 			</View>
 		))}
 		</AnimatedPagerView>
+		{isLastPage ? 
+		<TouchableOpacity style={{position: 'absolute', backgroundColor: '#1e2818', paddingVertical: 10, paddingHorizontal: windowWidth * 0.1, borderRadius: 5, bottom: windowWidth * 0.1, alignSelf: 'center'}} onPress={() => {storageOnboarding.set('isFirstTime', true); navigation.navigate('Home');}}>
+		<Text style={{color: 'white', fontSize: 15, fontWeight: 'bold'}}>Empezar</Text>
+		</TouchableOpacity>
+			: null
+		}
+		<View style={{position: 'absolute', flexDirection: 'row', justifyContent: 'center', alignItems: 'center', alignSelf: 'center', paddingBottom: windowWidth * 0.015}}>
+		{images.map((image, imageIndex) => (
+			<Animated.View style={[{width: windowWidth * 0.04, height: windowWidth * 0.04, backgroundColor: '#1e2818', borderRadius: windowWidth * 0.04, marginHorizontal: 5, opacity: 0.5}, {transform: [{scale: Animated.add(position, offset).interpolate({
+				inputRange: imageIndex == 0 ? [imageIndex, imageIndex + 1] : [imageIndex - 1, imageIndex, imageIndex + 1], 
+				outputRange: imageIndex == 0 ? [1.25, 1] : [1, 1.25, 1], 
+				extrapolate: 'clamp'
+			})
+			}], opacity: Animated.add(position, offset).interpolate({
+				inputRange: imageIndex == 0 ? [imageIndex, imageIndex + 1] : [imageIndex - 1, imageIndex, imageIndex + 1], 
+				outputRange: imageIndex == 0 ? [1, 0.5] : [0.5, 1, 0.5], 
+				extrapolate: 'clamp'
+			})
+			}]
+			}/>
+		))}
+		</View>
+		</View>
 	);
 };
 
+//<View style={{width: windowWidth * 0.05, height: windowWidth * 0.05, backgroundColor: '#1e2818', borderRadius: windowWidth * 0.04, marginHorizontal: 5}}/>
+/*offset.interpolate({
+		})
+		*/
 const styles = StyleSheet.create({
 	container: {
 		flex: 1,
