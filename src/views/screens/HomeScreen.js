@@ -6,15 +6,6 @@
  * @flow strict-local
  */
 
-/*
-Para saber cuantos días faltan antes de que se acabe el año:
-
-const currentDate = new Date();
-const currentYear = currentDate.getFullYear();
-const endYear = new Date(currentYear, 11, 31);
-const daysLeft = (endYear.getTime() - currentDate.getTime()) * 1.15741 * Math.pow(10, -8);
-*/
-
 import React, { useState, useEffect, useRef } from 'react';
 import type {Node} from 'react';
 import {
@@ -59,7 +50,7 @@ import { storageNotifications } from './../../../index.js';
 import API_KEY_here from './../../../API_KEY_here.js';
 
 const FRECUENCY_HOURS = 1;
-const DAYS_LEFT_NOTIFY = 1;
+const DAYS_LEFT_YEAR_NOTIFY = 145;
 
 if (storage.getAllKeys().length == 0) {
 	storage.set('AFG', JSON.stringify({countryCode: 'AFG', days: 0, maximumDays: 0}));
@@ -841,7 +832,31 @@ const HomeScreen: () => Node = () => {
 	}, []);
 
 	// To display notifications (background or foreground)
-	async function onDisplayNotification(daysLeft, countryCode) {
+	async function onDisplayNotification() {
+		const goals = await getGoals();
+		const daysLeftYear = await getDaysLeftYear();
+
+		if (daysLeftYear > DAYS_LEFT_YEAR_NOTIFY) {
+			return;
+		}
+
+		let bodyText = '';
+
+		if (goals.length > 1) {
+			bodyText = '¡Atención! Quedan ' + daysLeftYear + ' días para finalizar el año y te falta pasar:';
+			
+			goals.forEach(goal => {
+				bodyText = bodyText + '\n' + '- ' + goal.daysLeft + ' días en ' + COUNTRIES_DATA[goal.countryCode].name;
+			});
+			
+		} else if (goals.length == 1) {
+			bodyText = '¡Atención! Quedan ' + daysLeftYear + ' días para finalizar el año y te falta pasar ' + goals[0].daysLeft + ' días en ' + COUNTRIES_DATA[goals[0].countryCode].name;
+		} else if (goals.length == 0) {
+			bodyText = '¡Atención! Quedan ' + daysLeftYear + ' días para finalizar el año y no has establecido ningún objetivo';
+		}
+
+
+
 		// Request permissions (required for iOS)
 		await notifee.requestPermission()
 
@@ -854,9 +869,9 @@ const HomeScreen: () => Node = () => {
 
 		// Display a notification
 		await notifee.displayNotification({
-			id: countryCode,
-			title: 'Fatan ' + daysLeft + ' días',
-			body: 'Te faltan ' + daysLeft + ' días en ' + COUNTRIES_DATA[countryCode].name,
+			id: daysLeftYear,
+			title: '¡Atención! Quedan ' + daysLeftYear + ' días para finalizar el año',
+			body: bodyText,
 			android: {
 				channelId,
 				smallIcon: 'ic_small_icon', // optional, defaults to 'ic_launcher'.
@@ -892,11 +907,6 @@ const HomeScreen: () => Node = () => {
 		load(newDays, userDataItem.maximumDays);
 		storage.set(countryCode, JSON.stringify({...userDataItem, days: newDays}));
 
-		const daysLeft = userDataItem.maximumDays - newDays;
-
-		if (daysLeft <= DAYS_LEFT_NOTIFY && daysLeft >= 0) {
-			onDisplayNotification(daysLeft, countryCode);	
-		}
 	};
 
 	// Save positions that have been stored in storage
@@ -958,15 +968,19 @@ const HomeScreen: () => Node = () => {
 	// Activates when internet is on to update data
 	useEffect(() => {
 		const unsubscribe = NetInfo.addEventListener(state => {
-			var timeoutId;
+			var timeoutIdDisplay;
+			var timeoutIdUpdate;
 			if (state.isInternetReachable) {
 				console.log('internet is on');
-				clearTimeout(timeoutId);
+				clearTimeout(timeoutIdUpdate);
 				timeoutId = setTimeout(initUpdate, 10000);
 			} else {
 				console.log('internet is off');
-				clearTimeout(timeoutId);
+				clearTimeout(timeoutIdUpdate);
 			}
+
+			clearTimeout(timeoutIdDisplay);
+			timeoutIdDisplay = setTimeout(onDisplayNotification, 12000);
 		});
 
 		return () => {
@@ -1042,6 +1056,32 @@ const HomeScreen: () => Node = () => {
 		}
 	}, []);
 
+	async function getDaysLeftYear() {
+		const currentDate = new Date();
+		const currentYear = currentDate.getFullYear();
+		const endYear = new Date(currentYear, 11, 31);
+		const daysLeftYear = (endYear.getTime() - currentDate.getTime()) * 1.15741 * Math.pow(10, -8);
+
+		return daysLeftYear;
+	}
+
+	async function getGoals() {
+		const countryCodes = storage.getAllKeys();
+
+		let goals = [];
+		countryCodes.forEach(countryCode => {
+			const userDataItem = JSON.parse(storage.getString(countryCode));
+
+			const daysLeft = userDataItem.maximumDays - userDataItem.days;
+			
+			if (userDataItem.maximumDays > 0) {
+				goals.push({countryCode: countryCode, daysLeft: daysLeft});
+			}
+		});
+		
+		return goals;
+	}
+
 	async function storePositionData(latitude, longitude, millisecondsDate) {
 		storagePositions.set(millisecondsDate.toString(), JSON.stringify({latitude: latitude, longitude: longitude}));
 	}
@@ -1069,6 +1109,8 @@ const HomeScreen: () => Node = () => {
 		if (state.isInternetReachable) {
 			updatePositionsData();
 		}
+
+		onDisplayNotification();
 	}
 
 	// Background tasks
