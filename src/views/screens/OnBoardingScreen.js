@@ -83,15 +83,15 @@ const OnBoardingScreen: () => Node = ({ navigation }) => {
 			: null
 		}
 		<View style={{position: 'absolute', flexDirection: 'row', justifyContent: 'center', alignItems: 'center', alignSelf: 'center', paddingBottom: windowWidth * 0.015}}>
-		{images.map((image, imageIndex) => (
-			<Animated.View style={[{width: windowWidth * 0.04, height: windowWidth * 0.04, backgroundColor: '#1e2818', borderRadius: windowWidth * 0.04, marginHorizontal: 5, opacity: 0.5}, {transform: [{scale: Animated.add(position, offset).interpolate({
-				inputRange: imageIndex == 0 ? [imageIndex, imageIndex + 1] : [imageIndex - 1, imageIndex, imageIndex + 1], 
-				outputRange: imageIndex == 0 ? [1.25, 1] : [1, 1.25, 1], 
+		{images.map((image, index) => (
+			<Animated.View key={index} style={[{width: windowWidth * 0.04, height: windowWidth * 0.04, backgroundColor: '#1e2818', borderRadius: windowWidth * 0.04, marginHorizontal: 5, opacity: 0.5}, {transform: [{scale: Animated.add(position, offset).interpolate({
+				inputRange: index == 0 ? [index, index + 1] : [index - 1, index, index + 1], 
+				outputRange: index == 0 ? [1.25, 1] : [1, 1.25, 1], 
 				extrapolate: 'clamp'
 			})
 			}], opacity: Animated.add(position, offset).interpolate({
-				inputRange: imageIndex == 0 ? [imageIndex, imageIndex + 1] : [imageIndex - 1, imageIndex, imageIndex + 1], 
-				outputRange: imageIndex == 0 ? [1, 0.5] : [0.5, 1, 0.5], 
+				inputRange: index == 0 ? [index, index + 1] : [index - 1, index, index + 1], 
+				outputRange: index == 0 ? [1, 0.5] : [0.5, 1, 0.5], 
 				extrapolate: 'clamp'
 			})
 			}]
