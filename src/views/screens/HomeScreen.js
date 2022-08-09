@@ -944,8 +944,8 @@ const HomeScreen: () => Node = () => {
 		if (millisecondsDatesKeys.length == 1) {
 			const hoursElapsed = (millisecondsNow - parseInt(millisecondsDatesKeys[0], 10)) * 2.77778 * Math.pow(10, -7);
 
-			// At least one hour should have elapsed
-			if (hoursElapsed >= 1) {
+			// At least FRECUENCY_HOURS should have elapsed
+			if (hoursElapsed >= FRECUENCY_HOURS) {
 				Geolocation.getCurrentPosition(
 					(position) => {
 						const latitude = position.coords.latitude;
