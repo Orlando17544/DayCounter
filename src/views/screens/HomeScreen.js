@@ -991,7 +991,7 @@ const HomeScreen: () => Node = () => {
 			if (state.isInternetReachable) {
 				console.log('internet is on');
 				clearTimeout(timeoutIdUpdate);
-				timeoutId = setTimeout(initUpdate, 10000);
+				timeoutIdUpdate = setTimeout(initUpdate, 10000);
 			} else {
 				console.log('internet is off');
 				clearTimeout(timeoutIdUpdate);
