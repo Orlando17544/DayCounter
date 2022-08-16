@@ -963,6 +963,25 @@ const HomeScreen: () => Node = () => {
 		updatePositionsData();
 	};
 
+	async function initDisplay() {
+		let millisecondsDatesKeys = storagePositions.getAllKeys();
+		let millisecondsNow = Date.now();
+
+		let millisecondsDatesKeysIntegers = millisecondsDatesKeys.map(millisecondsDateKey => {
+			return parseInt(millisecondsDateKey, 10);
+		});
+
+		// Ascending order
+		millisecondsDatesKeysIntegers.sort(function(a, b){return a-b});
+
+		let millisecondsRecent = millisecondsDatesKeysIntegers[millisecondsDatesKeysIntegers.length - 1];
+
+		const hoursElapsed = (millisecondsNow - millisecondsRecent) * 2.77778 * Math.pow(10, -7);
+
+		if (hoursElapsed >= FRECUENCY_HOURS) {
+			onDisplayNotification();
+		}
+	}
 
 	// Activates when internet is on to update data
 	useEffect(() => {
@@ -979,7 +998,7 @@ const HomeScreen: () => Node = () => {
 			}
 
 			clearTimeout(timeoutIdDisplay);
-			timeoutIdDisplay = setTimeout(onDisplayNotification, 12000);
+			timeoutIdDisplay = setTimeout(initDisplay, 12000);
 		});
 
 		return () => {
