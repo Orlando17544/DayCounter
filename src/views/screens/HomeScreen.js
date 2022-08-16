@@ -48,7 +48,7 @@ export const storagePositions = new MMKV({
 import { storageNotifications } from './../../../index.js';
 import API_KEY_here from './../../../API_KEY_here.js';
 
-const FRECUENCY_HOURS = 1;
+const FRECUENCY_HOURS = 1 / 4;
 const DAYS_LEFT_YEAR_NOTIFY = 145;
 
 if (storage.getAllKeys().length == 0) {
@@ -868,7 +868,7 @@ const HomeScreen: () => Node = () => {
 
 		// Display a notification
 		await notifee.displayNotification({
-			id: daysLeftYear,
+			id: daysLeftYear.toString(),
 			title: '¡Atención! Quedan ' + daysLeftYear + ' días para finalizar el año',
 			body: bodyText,
 			android: {
