@@ -21,7 +21,6 @@ import {
 	TextInput,
 	Animated,
 	Image,
-	PermissionsAndroid,
 	Alert,
 	FlatList,
 	Platform,
@@ -812,7 +811,7 @@ const HomeScreen: () => Node = () => {
 	const [userData, setUserData] = useState(JSON.parse(storage.getString('AFG')));
 	const [modalVisibleCountries, setModalVisibleCountries] = useState(false);
 
-	// At the beginning there is no positions
+	// Store one position at the beginning
 	useEffect(() => {
 		if (storagePositions.getAllKeys().length == 0) {
 			Geolocation.getCurrentPosition(
@@ -1022,38 +1021,6 @@ const HomeScreen: () => Node = () => {
 		return () => {
 			subscription.remove();
 		};
-	}, []);
-
-	// Permissions location
-	useEffect(() => {
-		async function askPermissionsAndroid() {
-			try {
-				let permissionFineLocation = await PermissionsAndroid.check(PermissionsAndroid.PERMISSIONS.ACCESS_FINE_LOCATION);
-				let permissionCoarseLocation = await PermissionsAndroid.check(PermissionsAndroid.PERMISSIONS.ACCESS_COARSE_LOCATION);
-				let permissionBackgroundLocation = await PermissionsAndroid.check(PermissionsAndroid.PERMISSIONS.ACCESS_BACKGROUND_LOCATION);
-
-				if (!permissionFineLocation || !permissionCoarseLocation || ! permissionBackgroundLocation) {
-					PermissionsAndroid.requestMultiple([
-						PermissionsAndroid.PERMISSIONS.ACCESS_FINE_LOCATION, 
-						PermissionsAndroid.PERMISSIONS.ACCESS_COARSE_LOCATION, 
-						PermissionsAndroid.PERMISSIONS.ACCESS_BACKGROUND_LOCATION
-					]);
-				}
-			} catch(error) {
-				console.log(error);
-			}
-		}
-
-		async function askPermissionsiOS() {
-			const statusAuthorization = await Geolocation.requestAuthorization('always');
-			console.log(statusAuthorization);
-		}
-
-		if (Platform.OS === 'ios') {
-			askPermissionsiOS();
-		} else {
-			askPermissionsAndroid();
-		}
 	}, []);
 
 	async function getDaysLeftYear() {

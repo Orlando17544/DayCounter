@@ -19,11 +19,13 @@ import {
 	TouchableOpacity,
 	Animated,
 	Dimensions,
-	Image
+	Image,
+	PermissionsAndroid,
 } from 'react-native';
 
 import { MMKV } from 'react-native-mmkv';
 import PagerView from 'react-native-pager-view';
+import Geolocation from 'react-native-geolocation-service';
 
 const AnimatedPagerView = Animated.createAnimatedComponent(PagerView);
 
@@ -42,6 +44,37 @@ const images = [
 
 const OnBoardingScreen: () => Node = ({ navigation }) => {
 	const [isLastPage, setIsLastPage] = useState(false);
+
+	useEffect(() => {
+		async function askPermissionsAndroid() {
+			try {
+				let permissionFineLocation = await PermissionsAndroid.check(PermissionsAndroid.PERMISSIONS.ACCESS_FINE_LOCATION);
+				let permissionCoarseLocation = await PermissionsAndroid.check(PermissionsAndroid.PERMISSIONS.ACCESS_COARSE_LOCATION);
+				let permissionBackgroundLocation = await PermissionsAndroid.check(PermissionsAndroid.PERMISSIONS.ACCESS_BACKGROUND_LOCATION);
+
+				if (!permissionFineLocation || !permissionCoarseLocation || ! permissionBackgroundLocation) {
+					PermissionsAndroid.requestMultiple([
+						PermissionsAndroid.PERMISSIONS.ACCESS_FINE_LOCATION, 
+						PermissionsAndroid.PERMISSIONS.ACCESS_COARSE_LOCATION, 
+						PermissionsAndroid.PERMISSIONS.ACCESS_BACKGROUND_LOCATION
+					]);
+				}
+			} catch(error) {
+				console.log(error);
+			}
+		}
+
+		async function askPermissionsiOS() {
+			const statusAuthorization = await Geolocation.requestAuthorization('always');
+			console.log(statusAuthorization);
+		}
+
+		if (Platform.OS === 'ios') {
+			askPermissionsiOS();
+		} else {
+			askPermissionsAndroid();
+		}
+	}, [])
 
 	const offset = useRef(new Animated.Value(0)).current;
 	const position = useRef(new Animated.Value(0)).current;
