@@ -830,6 +830,20 @@ const HomeScreen: () => Node = () => {
 		}
 	}, []);
 
+	async function getCountryCodeMaxDaysLeft(goals) {
+		let maxDaysLeft = 0;
+		let countryCode = 'AFG';
+
+		goals.forEach(goal => {
+			if (goal.daysLeft > maxDaysLeft) {
+				maxDaysLeft = goal.daysLeft;
+				countryCode = goal.countryCode;
+			}
+		});
+
+		return countryCode;
+	}
+
 	// To display notifications (background or foreground)
 	async function onDisplayNotification() {
 		const goals = await getGoals();
@@ -854,7 +868,7 @@ const HomeScreen: () => Node = () => {
 			bodyText = '¡Atención! Quedan ' + daysLeftYear + ' días para finalizar el año y no has establecido ningún objetivo';
 		}
 
-
+		let countryCodeMaxDaysLeft = await getCountryCodeMaxDaysLeft(goals);
 
 		// Request permissions (required for iOS)
 		await notifee.requestPermission()
@@ -868,7 +882,7 @@ const HomeScreen: () => Node = () => {
 
 		// Display a notification
 		await notifee.displayNotification({
-			id: daysLeftYear.toString(),
+			id: countryCodeMaxDaysLeft,
 			title: '¡Atención! Quedan ' + daysLeftYear + ' días para finalizar el año',
 			body: bodyText,
 			android: {

@@ -24,7 +24,9 @@ notifee.onBackgroundEvent(async ({ type, detail }) => {
 	}
 });
 
-// To store positions in background
+AppRegistry.registerComponent(appName, () => App);
+
+// To store positions when the app is finished
 let MyHeadlessTask = async (event) => {
 	// Get task id from event {}:
 	let taskId = event.taskId;
@@ -48,5 +50,3 @@ let MyHeadlessTask = async (event) => {
 
 // Register your BackgroundFetch HeadlessTask
 BackgroundFetch.registerHeadlessTask(MyHeadlessTask);
-
-AppRegistry.registerComponent(appName, () => App);
