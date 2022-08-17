@@ -51,6 +51,8 @@ import API_KEY_here from './../../../API_KEY_here.js';
 const FRECUENCY_HOURS = 1 / 4;
 const DAYS_LEFT_YEAR_NOTIFY = 145;
 
+
+
 if (storage.getAllKeys().length == 0) {
 	storage.set('AFG', JSON.stringify({countryCode: 'AFG', days: 0, maximumDays: 0}));
 	storage.set('ALA', JSON.stringify({countryCode: 'ALA', days: 0, maximumDays: 0}));
@@ -303,6 +305,7 @@ if (storage.getAllKeys().length == 0) {
 	storage.set('ZWE', JSON.stringify({countryCode: 'ZWE', days: 0, maximumDays: 0}));
 }
 
+/*
 const COUNTRIES_DATA = {
 	'AFG': {name: 'Afganistán', source: require('./../../../assets/flags/af.png')},
 	'ALA': {name: 'Åland, Islas', source: require('./../../../assets/flags/ax.png')},
@@ -805,15 +808,19 @@ COUNTRIES_DATA_ARRAY = [
 	{code: 'DJI', name: 'Yibuti', source: require('./../../../assets/flags/dj.png')},
 	{code: 'ZMB', name: 'Zambia', source: require('./../../../assets/flags/zm.png')},
 	{code: 'ZWE', name: 'Zimbabue', source: require('./../../../assets/flags/zw.png')}
-];
+];*/
 
 const HomeScreen: () => Node = () => {
 	const [userData, setUserData] = useState(JSON.parse(storage.getString('AFG')));
 	const [modalVisibleCountries, setModalVisibleCountries] = useState(false);
 
+	const backgroundTasks = new BackgroundTasks();
+	const countries = new Countries();
+
 	// Store one position at the beginning
 	useEffect(() => {
 		if (storagePositions.getAllKeys().length == 0) {
+			/*
 			Geolocation.getCurrentPosition(
 				(position) => {
 					const latitude = position.coords.latitude;
@@ -826,11 +833,12 @@ const HomeScreen: () => Node = () => {
 					console.log(error.code, error.message);
 				},
 				{ enableHighAccuracy: true, maximumAge: 1, distanceFilter: 1 }
-			);
+			);*/
+			backgroundTasks.storePosition();
 		}
 	}, []);
 
-	async function getCountryCodeMaxDaysLeft(goals) {
+/*	async function getCountryCodeMaxDaysLeft(goals) {
 		let maxDaysLeft = 0;
 		let countryCode = 'AFG';
 
@@ -842,8 +850,8 @@ const HomeScreen: () => Node = () => {
 		});
 
 		return countryCode;
-	}
-
+	}*/
+/*
 	// To display notifications (background or foreground)
 	async function onDisplayNotification() {
 		const goals = await getGoals();
@@ -898,7 +906,9 @@ const HomeScreen: () => Node = () => {
 				sound: 'default', // Default sound for iOS
 			},
 		});
-	}
+	}*/
+
+	/*
 
 	// Save user data in storage
 	async function updatePositionData(latitude, longitude, timeElapsedDays) {
@@ -920,10 +930,17 @@ const HomeScreen: () => Node = () => {
 		load(newDays, userDataItem.maximumDays);
 		storage.set(countryCode, JSON.stringify({...userDataItem, days: newDays}));
 
-	};
+	};*/
 
+	/*
 	// Save positions that have been stored in storage
 	async function updatePositionsData() {
+		const state = await NetInfo.fetch();
+
+		if (!state.isInternetReachable) {
+			return;
+		}
+
 		let millisecondsDatesKeys = storagePositions.getAllKeys();
 
 		if (millisecondsDatesKeys.length < 2) {
@@ -948,7 +965,7 @@ const HomeScreen: () => Node = () => {
 			updatePositionData(latitude, longitude, timeElapsedDays);
 			storagePositions.delete(millisecondsDatesKeysIntegers[i].toString());
 		}
-	};
+	};*/
 
 	async function initUpdate() {
 		let millisecondsDatesKeys = storagePositions.getAllKeys();
@@ -974,7 +991,8 @@ const HomeScreen: () => Node = () => {
 				);
 			}
 		} 
-		updatePositionsData();
+		backgroundTasks.updatePositionsData();
+		//updatePositionsData();
 	};
 
 	async function initDisplay() {
@@ -1056,6 +1074,8 @@ const HomeScreen: () => Node = () => {
 		};
 	}, []);
 
+	/*
+
 	async function getDaysLeftYear() {
 		const currentDate = new Date();
 		const currentYear = currentDate.getFullYear();
@@ -1080,12 +1100,13 @@ const HomeScreen: () => Node = () => {
 		});
 		
 		return goals;
-	}
+	}*/
 
+/*	
 	async function storePositionData(latitude, longitude, millisecondsDate) {
 		storagePositions.set(millisecondsDate.toString(), JSON.stringify({latitude: latitude, longitude: longitude}));
-	}
-
+	}*/
+/*
 	// Background task
 	async function backgroundTask() {
 
@@ -1102,15 +1123,15 @@ const HomeScreen: () => Node = () => {
 				console.log(error.code, error.message);
 			},
 			{ enableHighAccuracy: true, maximumAge: 1, distanceFilter: 1 }
-		);
+		);*/
 
-		const state = await NetInfo.fetch();
 
-		if (state.isInternetReachable) {
-			updatePositionsData();
-		}
+		//updatePositionsData();
 
-		onDisplayNotification();
+		//onDisplayNotification();
+	
+		backgroundTasks.updatePositionsData();
+		backgroundTasks.displayNotification();
 	}
 
 	// Background tasks
@@ -1179,7 +1200,7 @@ const HomeScreen: () => Node = () => {
 		<View style={{alignItems: 'center'}}>
 		<Text style={styles.text}>Tus días en </Text>
 		<TouchableOpacity onPress={() => {setModalVisibleCountries(true);}}>
-		<Text style={[styles.text, {fontWeight: 'bold'} ]}>{COUNTRIES_DATA[userData.countryCode].name}</Text>
+		<Text style={[styles.text, {fontWeight: 'bold'} ]}>{countries.getName(userData.countryCode)}</Text>
 		</TouchableOpacity>
 		<Modal
 		visible={modalVisibleCountries}
@@ -1189,7 +1210,7 @@ const HomeScreen: () => Node = () => {
 		>
 		<View style={{flex: 1, marginVertical: 15, marginHorizontal: 15, backgroundColor: 'white', borderRadius: 5, paddingHorizontal: 15, paddingVertical: 15}}>
 		<FlatList
-		data={COUNTRIES_DATA_ARRAY}
+		data={countries.getCountriesData()}
 		renderItem={renderItem}
 		keyExtractor={item => item.code}
 		initialNumToRender={50}
@@ -1197,7 +1218,7 @@ const HomeScreen: () => Node = () => {
 		/>
 		</View>
 		</Modal>
-		<Image style={styles.flag} source={COUNTRIES_DATA[userData.countryCode].source}/>
+		<Image style={styles.flag} source={countries.getSource(userData.countryCode)}/>
 		<View style={{flexDirection: 'row', alignItems: 'center'}}>
 		<Text style={styles.text}>{userData.days.toString()}/</Text>
 		<TextInput
