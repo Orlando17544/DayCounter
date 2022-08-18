@@ -6,13 +6,14 @@ import {AppRegistry} from 'react-native';
 import App from './App';
 import {name as appName} from './app.json';
 
-import { MMKV } from 'react-native-mmkv';
 import notifee, { EventType } from '@notifee/react-native';
 import BackgroundFetch from "react-native-background-fetch";
 
-export const storageNotifications = new MMKV({
-	id: `user-notifications-storage`
-})
+import { storageNotifications } from './src/storage/storage.js';
+
+import BackgroundTasks from './src/classes/BackgroundTasks.js';
+
+const backgroundTasks = new BackgroundTasks();
 
 // Background events of notifications
 notifee.onBackgroundEvent(async ({ type, detail }) => {
@@ -39,8 +40,10 @@ let MyHeadlessTask = async (event) => {
 		return;
 	}
 	console.log('[BackgroundFetch HeadlessTask] start: ', taskId);
-
-	await App.backgroundTask();
+	
+	await backgroundTasks.storePosition();
+	await backgroundTasks.updatePositions();
+	await backgroundTasks.displayNotification();
 
 	// Required:  Signal to native code that your task is complete.
 	// If you don't do this, your app could be terminated and/or assigned
