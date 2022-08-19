@@ -42,17 +42,11 @@ import BackgroundTasks from './../../classes/BackgroundTasks.js';
 import Countries from './../../classes/Countries.js';
 import UserData from './../../classes/UserData.js';
 
-const backgroundTasks = new BackgroundTasks();
-const countries = new Countries();
-const userDataObject = new UserData();
-
-if (storageUser.getAllKeys().length == 0) {
-	countries.getCountriesData().forEach(item => {
-		storageUser.set(item.code, JSON.stringify({countryCode: item.code, days: 0, maximumDays: 0, lastUpdate: Date.now()})); 
-	});
-}
-
 const HomeScreen: () => Node = () => {
+	const backgroundTasks = new BackgroundTasks();
+	const countries = new Countries();
+	const userDataObject = new UserData();
+
 	const [userData, setUserData] = useState(JSON.parse(storageUser.getString('AFG')));
 	const [modalVisibleCountries, setModalVisibleCountries] = useState(false);
 
@@ -61,12 +55,6 @@ const HomeScreen: () => Node = () => {
 		if (storagePositions.getAllKeys().length == 0) {
 			backgroundTasks.storePosition();
 		}
-
-		async function prueba() {
-			console.log(await userDataObject.getLatest());
-		}
-
-		prueba();
 	}, []);
 
 	async function initUpdate() {

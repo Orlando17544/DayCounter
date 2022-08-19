@@ -9,11 +9,18 @@ import {name as appName} from './app.json';
 import notifee, { EventType } from '@notifee/react-native';
 import BackgroundFetch from "react-native-background-fetch";
 
-import { storageNotifications } from './src/storage/storage.js';
+import { storageUser, storageNotifications } from './src/storage/storage.js';
 
 import BackgroundTasks from './src/classes/BackgroundTasks.js';
+import Countries from './src/classes/Countries.js';
 
-const backgroundTasks = new BackgroundTasks();
+if (storageUser.getAllKeys().length == 0) {
+	const countries = new Countries();
+
+	countries.getCountriesData().forEach(item => {
+		storageUser.set(item.code, JSON.stringify({countryCode: item.code, days: 0, maximumDays: 0, lastUpdate: Date.now()})); 
+	});
+}
 
 // Background events of notifications
 notifee.onBackgroundEvent(async ({ type, detail }) => {
@@ -40,7 +47,9 @@ let MyHeadlessTask = async (event) => {
 		return;
 	}
 	console.log('[BackgroundFetch HeadlessTask] start: ', taskId);
-	
+
+	const backgroundTasks = new BackgroundTasks();	
+
 	await backgroundTasks.storePosition();
 	await backgroundTasks.updatePositions();
 	await backgroundTasks.displayNotification();

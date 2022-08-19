@@ -12,11 +12,10 @@ import { storageUser, storagePositions, storageNotifications } from './../storag
 
 class BackgroundTasks {
 	constructor() {
-		this.DAYS_LEFT_YEAR_NOTIFY = DAYS_LEFT_YEAR_NOTIFY;
-		this.countries = new Countries();
+		this.countries = new Countries();	
 		this.userData = new UserData();
 	}
-
+	
 	//Display the notification (background or foreground)
 	async displayNotification() {
 		const daysLeftYear = await this.getDaysLeftYear();
@@ -24,7 +23,7 @@ class BackgroundTasks {
 		const goals = await this.userData.getGoals();
 		const latest = await this.userData.getLatest();
 
-		if (daysLeftYear > this.DAYS_LEFT_YEAR_NOTIFY) {
+		if (daysLeftYear > DAYS_LEFT_YEAR_NOTIFY) {
 			return;
 		}
 
@@ -44,7 +43,6 @@ class BackgroundTasks {
 		} else if (goals.length == 0) {
 			bodyText = '¡Atención! Quedan ' + daysLeftYear + ' días para finalizar el año y no has establecido ningún objetivo';
 		}
-
 
 		// Request permissions (required for iOS)
 		await notifee.requestPermission()
@@ -128,8 +126,6 @@ class BackgroundTasks {
 			const newDays = userDataItem.days + timeElapsedDays;
 
 			console.log({...userDataItem, days: newDays});
-			setUserData({...userDataItem, days: newDays});
-			load(newDays, userDataItem.maximumDays);
 			storageUser.set(countryCode, JSON.stringify({...userDataItem, days: newDays, lastUpdate: Date.now()}));
 
 			storagePositions.delete(millisecondsDatesKeysIntegers[i].toString());
