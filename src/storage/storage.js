@@ -11,3 +11,7 @@ export const storagePositions = new MMKV({
 export const storageNotifications = new MMKV({
 	id: `notifications-storage`
 })
+
+export const storageOnboarding = new MMKV({
+	id: `user-userOnboarding-storage`
+})

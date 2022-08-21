@@ -43,36 +43,19 @@ import Countries from './../../classes/Countries.js';
 import UserData from './../../classes/UserData.js';
 
 const HomeScreen: () => Node = () => {
-	const backgroundTasks = new BackgroundTasks();
-	const countries = new Countries();
-	const userDataObject = new UserData();
-
 	const [userData, setUserData] = useState(JSON.parse(storageUser.getString('AFG')));
 	const [modalVisibleCountries, setModalVisibleCountries] = useState(false);
+
+	let timeoutId;
 
 	// Store one position at the beginning
 	useEffect(() => {
 		if (storagePositions.getAllKeys().length == 0) {
-			backgroundTasks.storePosition();
+			BackgroundTasks.storePosition();
 		}
 	}, []);
 
-	async function initUpdate() {
-		let millisecondsDatesKeys = storagePositions.getAllKeys();
-		let millisecondsNow = Date.now();
-
-		if (millisecondsDatesKeys.length == 1) {
-			const hoursElapsed = (millisecondsNow - parseInt(millisecondsDatesKeys[0], 10)) * 2.77778 * Math.pow(10, -7);
-
-			// At least FRECUENCY_HOURS should have elapsed
-			if (hoursElapsed >= FRECUENCY_HOURS) {
-				await backgroundTasks.storePosition();
-			}
-		} 
-		await backgroundTasks.updatePositions();
-	};
-
-	async function initDisplay() {
+	async function initBackgroundTasks() {
 		let millisecondsDatesKeys = storagePositions.getAllKeys();
 		let millisecondsNow = Date.now();
 
@@ -88,26 +71,31 @@ const HomeScreen: () => Node = () => {
 		const hoursElapsed = (millisecondsNow - millisecondsRecent) * 2.77778 * Math.pow(10, -7);
 
 		if (hoursElapsed >= FRECUENCY_HOURS) {
-			await backgroundTasks.displayNotification();
+			await BackgroundTasks.storePosition(
+				BackgroundTasks,
+				BackgroundTasks.updatePositions, 
+				BackgroundTasks.displayNotification, 
+				updateForeground
+			);
+		} else {
+			await BackgroundTasks.updatePositions();
+			await BackgroundTasks.displayNotification();
+
+			updateForeground();
 		}
 	}
 
 	// Activates when internet is on to update data
 	useEffect(() => {
 		const unsubscribe = NetInfo.addEventListener(state => {
-			var timeoutIdDisplay;
-			var timeoutIdUpdate;
 			if (state.isInternetReachable) {
 				console.log('internet is on');
-				clearTimeout(timeoutIdUpdate);
-				timeoutIdUpdate = setTimeout(initUpdate, 10000);
+				clearTimeout(timeoutId);
+				timeoutId = setTimeout(initBackgroundTasks, 10000);
 			} else {
 				console.log('internet is off');
-				clearTimeout(timeoutIdUpdate);
+				clearTimeout(timeoutId);
 			}
-
-			clearTimeout(timeoutIdDisplay);
-			timeoutIdDisplay = setTimeout(initDisplay, 12000);
 		});
 
 		return () => {
@@ -151,16 +139,21 @@ const HomeScreen: () => Node = () => {
 		};
 	}, []);
 
-	// Background task
-	async function backgroundTask() {
-		await backgroundTasks.storePosition();
-		await backgroundTasks.updatePositions();
-		await backgroundTasks.displayNotification();
-
-		const lastUserData = await userDataObject.getLatest();
+	function updateForeground() {
+		const lastUserData = UserData.getLatest();
 
 		setUserData(lastUserData);
 		load(lastUserData.days, lastUserData.maximumDays);
+	}
+
+	// Background task
+	async function backgroundTask() {
+		await BackgroundTasks.storePosition(
+			BackgroundTasks,
+			BackgroundTasks.updatePositions, 
+			BackgroundTasks.displayNotification, 
+			updateForeground
+		);
 	}
 
 	// Background tasks
@@ -221,7 +214,7 @@ const HomeScreen: () => Node = () => {
 		</View>
 		</TouchableOpacity>
 	);
-	
+
 	return (
 		<LinearGradient style={styles.container} colors={['#1e2818', '#020304']}>
 		<SafeAreaView>
@@ -229,7 +222,7 @@ const HomeScreen: () => Node = () => {
 		<View style={{alignItems: 'center'}}>
 		<Text style={styles.text}>Tus días en </Text>
 		<TouchableOpacity onPress={() => {setModalVisibleCountries(true);}}>
-		<Text style={[styles.text, {fontWeight: 'bold'} ]}>{countries.getName(userData.countryCode)}</Text>
+		<Text style={[styles.text, {fontWeight: 'bold'} ]}>{Countries.getName(userData.countryCode)}</Text>
 		</TouchableOpacity>
 		<Modal
 		visible={modalVisibleCountries}
@@ -239,7 +232,7 @@ const HomeScreen: () => Node = () => {
 		>
 		<View style={{flex: 1, marginVertical: 15, marginHorizontal: 15, backgroundColor: 'white', borderRadius: 5, paddingHorizontal: 15, paddingVertical: 15}}>
 		<FlatList
-		data={countries.getCountriesData()}
+		data={Countries.getCountriesData()}
 		renderItem={renderItem}
 		keyExtractor={item => item.code}
 		initialNumToRender={50}
@@ -247,7 +240,7 @@ const HomeScreen: () => Node = () => {
 		/>
 		</View>
 		</Modal>
-		<Image style={styles.flag} source={countries.getSource(userData.countryCode)}/>
+		<Image style={styles.flag} source={Countries.getSource(userData.countryCode)}/>
 		<View style={{flexDirection: 'row', alignItems: 'center'}}>
 		<Text style={styles.text}>{userData.days.toString()}/</Text>
 		<TextInput
@@ -281,7 +274,7 @@ const HomeScreen: () => Node = () => {
 		</SafeAreaView>
 		</LinearGradient>
 	);
-	
+
 };
 
 const styles = StyleSheet.create({

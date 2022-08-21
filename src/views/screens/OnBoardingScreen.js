@@ -29,7 +29,7 @@ import Geolocation from 'react-native-geolocation-service';
 
 const AnimatedPagerView = Animated.createAnimatedComponent(PagerView);
 
-import { storageOnboarding } from './../../../App.js';
+import { storageOnboarding } from './../../storage/storage.js';
 
 const windowWidth = Dimensions.get('window').width;
 const windowHeight = Dimensions.get('window').height;

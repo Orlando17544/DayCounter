@@ -2,15 +2,11 @@ import Countries from './Countries.js';
 import { storageUser } from './../storage/storage.js';
 
 class UserData {
-	constructor() {
-		this.countries = new Countries();
-	}
-
-	async getLatest() {
+	static getLatest() {
 		let latest = 0;
 		let item;
 
-		this.countries.getCountriesData().forEach(element => {
+		Countries.getCountriesData().forEach(element => {
 			const userDataItem = JSON.parse(storageUser.getString(element.code));
 
 			if (latest < userDataItem.lastUpdate) {
@@ -22,9 +18,9 @@ class UserData {
 		return item;
 	}
 
-	async getGoals() {
+	static getGoals() {
 		let goals = [];
-		this.countries.getCountriesData().forEach(item => {
+		Countries.getCountriesData().forEach(item => {
 			const userDataItem = JSON.parse(storageUser.getString(item.code));
 			
 			if (userDataItem.maximumDays > 0) {

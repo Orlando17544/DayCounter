@@ -1,27 +1,22 @@
 import NetInfo from "@react-native-community/netinfo";
-import notifee, { EventType } from '@notifee/react-native';
+import notifee, { EventType, AndroidStyle } from '@notifee/react-native';
 import Geolocation from 'react-native-geolocation-service';
 const axios = require('axios').default;
 
 import Countries from './Countries.js';
 import UserData from './UserData.js';
 
-import { DAYS_LEFT_YEAR_NOTIFY, API_KEY_here } from './../constants/constants.js'
+import { DAYS_LEFT_YEAR_NOTIFY, API_KEY_here, FRECUENCY_HOURS } from './../constants/constants.js'
 
 import { storageUser, storagePositions, storageNotifications } from './../storage/storage.js';
 
 class BackgroundTasks {
-	constructor() {
-		this.countries = new Countries();	
-		this.userData = new UserData();
-	}
-	
 	//Display the notification (background or foreground)
-	async displayNotification() {
-		const daysLeftYear = await this.getDaysLeftYear();
+	static async displayNotification() {
+		const daysLeftYear = this.getDaysLeftYear();
 
-		const goals = await this.userData.getGoals();
-		const latest = await this.userData.getLatest();
+		const goals = UserData.getGoals();
+		const latest = UserData.getLatest();
 
 		if (daysLeftYear > DAYS_LEFT_YEAR_NOTIFY) {
 			return;
@@ -30,18 +25,20 @@ class BackgroundTasks {
 		let bodyText = '';
 
 		if (goals.length > 1) {
-			bodyText = '¡Atención! Quedan ' + daysLeftYear + ' días para finalizar el año y te falta pasar:';
+			bodyText = '<p>Te falta pasar:';
 
 			goals.forEach(goal => {
 				const daysLeft = goal.maximumDays - goal.days;
-				bodyText = bodyText + '\n' + '- ' + daysLeft + ' días en ' + this.countries.getName(goal.countryCode);
+				bodyText = bodyText + '<br>' + '- ' + daysLeft + ' días en ' + Countries.getName(goal.countryCode);
 			});
+
+			bodyText = bodyText + '</p>';
 
 		} else if (goals.length == 1) {
 			const daysLeft = goals[0].maximumDays - goals[0].days;
-			bodyText = '¡Atención! Quedan ' + daysLeftYear + ' días para finalizar el año y te falta pasar ' + daysLeft + ' días en ' + this.countries.getName(goals[0].countryCode);
+			bodyText = '<p>Te falta pasar ' + daysLeft + ' días en ' + Countries.getName(goals[0].countryCode) + '</p>';
 		} else if (goals.length == 0) {
-			bodyText = '¡Atención! Quedan ' + daysLeftYear + ' días para finalizar el año y no has establecido ningún objetivo';
+			bodyText = '<p>No has establecido ningún objetivo</p>';
 		}
 
 		// Request permissions (required for iOS)
@@ -57,7 +54,7 @@ class BackgroundTasks {
 		// Display a notification
 		await notifee.displayNotification({
 			id: latest.countryCode,
-			title: '¡Atención! Quedan ' + daysLeftYear + ' días para finalizar el año',
+			title: '<p><b>¡Atención! Quedan ' + daysLeftYear + ' días para finalizar el año</b></p>',
 			body: bodyText,
 			android: {
 				channelId,
@@ -67,6 +64,7 @@ class BackgroundTasks {
 				pressAction: {
 					id: 'default',
 				},
+				style: { type: AndroidStyle.BIGTEXT, text: bodyText }
 			},
 			ios: {
 				sound: 'default', // Default sound for iOS
@@ -75,26 +73,40 @@ class BackgroundTasks {
 	}
 
 	//Store the position in local memory
-	async storePosition() {
+	static async storePosition(backgroundClass, ...arrayFn) {
 		Geolocation.getCurrentPosition(
-			(position) => {
+			async function getPosition(position) {
 				const latitude = position.coords.latitude;
 				const longitude = position.coords.longitude;
 
+				console.log('Posición: ' + latitude + ', ' + longitude);
+
 				storagePositions.set(Date.now().toString(), JSON.stringify({latitude: latitude, longitude: longitude}));
+
+				if (arrayFn.length > 0) {
+					for (const fn of arrayFn) {
+						if (backgroundClass.hasOwnProperty(fn.name)) {
+							await fn.call(backgroundClass);
+						} else {
+							fn();
+						}
+					}
+				}
 			},
 			(error) => {
 				// See error code charts below.
 				console.log(error.code, error.message);
 			},
-			{ enableHighAccuracy: true, maximumAge: 1, distanceFilter: 1 }
+			{ timeout: (FRECUENCY_HOURS / 4) * 3.6 * Math.pow(10, 6), enableHighAccuracy: true, maximumAge: 1, distanceFilter: 1 }
 		);
 	}
 	
 	//Update the country of the position and store it in memory
-	async updatePositions() {
+	static async updatePositions() {
 		const state = await NetInfo.fetch();
 		let millisecondsDatesKeys = storagePositions.getAllKeys();
+
+		console.log('Sin organizar: ' + millisecondsDatesKeys);
 
 		if (!state.isInternetReachable || millisecondsDatesKeys.length < 2) {
 			return;
@@ -106,6 +118,8 @@ class BackgroundTasks {
 
 		// Ascending order
 		millisecondsDatesKeysIntegers.sort(function(a, b){return a-b});
+
+		console.log('Organizados: ' + millisecondsDatesKeysIntegers);
 
 		for (var i = 0; i < millisecondsDatesKeysIntegers.length - 1; i++) {
 			const timeElapsedMilliseconds = millisecondsDatesKeysIntegers[i + 1] - millisecondsDatesKeysIntegers[i];
@@ -132,7 +146,7 @@ class BackgroundTasks {
 		}
 	};
 
-	async getDaysLeftYear() {
+	static getDaysLeftYear() {
 		const currentDate = new Date();
 		const currentYear = currentDate.getFullYear();
 		const endYear = new Date(currentYear, 11, 31);

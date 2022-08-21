@@ -23,11 +23,7 @@ import { createNativeStackNavigator } from '@react-navigation/native-stack';
 
 const Stack = createNativeStackNavigator();
 
-import { MMKV } from 'react-native-mmkv';
-
-export const storageOnboarding = new MMKV({
-	id: `user-userOnboarding-storage`
-})
+import { storageOnboarding } from './src/storage/storage.js';
 
 import OnBoardingScreen from './src/views/screens/OnBoardingScreen.js';
 import HomeScreen from './src/views/screens/HomeScreen.js';
