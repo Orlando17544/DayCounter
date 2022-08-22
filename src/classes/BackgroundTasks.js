@@ -48,8 +48,6 @@ class BackgroundTasks {
 						}
 					}
 				}
-
-				this.executingStorePosition = false;
 			},
 			(error) => {
 				// See error code charts below.
