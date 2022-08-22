@@ -25,30 +25,33 @@ class BackgroundTasks {
 
 		console.log('storePosition started');
 
-		Geolocation.getCurrentPosition(
-			async function getPosition(position) {
-				const latitude = position.coords.latitude;
-				const longitude = position.coords.longitude;
+		async function getPosition(position) {
+			const latitude = position.coords.latitude;
+			const longitude = position.coords.longitude;
 
-				console.log('New position: ' + latitude + ', ' + longitude);
+			console.log('New position: ' + latitude + ', ' + longitude);
 
-				storagePositions.set(Date.now().toString(), JSON.stringify({latitude: latitude, longitude: longitude}));
+			storagePositions.set(Date.now().toString(), JSON.stringify({latitude: latitude, longitude: longitude}));
 
-				this.executingStorePosition = false;
+			this.executingStorePosition = false;
 
-				console.log('storePosition finished');
+			console.log('storePosition finished');
 
-				//functions to execute after get the new position
-				if (arrayFn.length > 0) {
-					for (const fn of arrayFn) {
-						if (backgroundClass.hasOwnProperty(fn.name)) {
-							await fn.call(backgroundClass);
-						} else {
-							fn();
-						}
+			//functions to execute after get the new position
+			if (arrayFn.length > 0) {
+				for (const fn of arrayFn) {
+					if (backgroundClass.hasOwnProperty(fn.name)) {
+						await fn.call(backgroundClass);
+					} else {
+						fn();
 					}
 				}
-			},
+			}
+		}
+
+		const getPositionBound = getPosition.bind(this);
+
+		Geolocation.getCurrentPosition(getPositionBound, 
 			(error) => {
 				// See error code charts below.
 				console.log(error.code, error.message);
