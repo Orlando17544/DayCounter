@@ -6,7 +6,7 @@ const axios = require('axios').default;
 import Countries from './Countries.js';
 import UserData from './UserData.js';
 
-import { DAYS_LEFT_YEAR_NOTIFY, API_KEY_here, FRECUENCY_HOURS } from './../constants/constants.js'
+import { DAYS_LEFT_YEAR_NOTIFY, API_KEY_here } from './../constants/constants.js'
 
 import { storageUser, storagePositions, storageNotifications } from './../storage/storage.js';
 
@@ -72,7 +72,7 @@ class BackgroundTasks {
 		Geolocation.getCurrentPosition(
 			getPositionBound, 
 			getErrorBound, 
-			{ timeout: (FRECUENCY_HOURS / 4) * 3.6 * Math.pow(10, 6), accuracy: {android: 'low', ios: 'threeKilometers'}, maximumAge: 1, distanceFilter: 1 }
+			{ timeout: 10000, accuracy: {android: 'low', ios: 'threeKilometers'}, maximumAge: 10000, distanceFilter: 100 }
 		);
 	}
 
