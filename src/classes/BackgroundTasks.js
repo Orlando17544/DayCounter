@@ -72,7 +72,7 @@ class BackgroundTasks {
 		Geolocation.getCurrentPosition(
 			getPositionBound, 
 			getErrorBound, 
-			{ timeout: (FRECUENCY_HOURS / 4) * 3.6 * Math.pow(10, 6), enableHighAccuracy: true, maximumAge: 1, distanceFilter: 1 }
+			{ timeout: (FRECUENCY_HOURS / 4) * 3.6 * Math.pow(10, 6), accuracy: {android: 'low', ios: 'threeKilometers'}, maximumAge: 1, distanceFilter: 1 }
 		);
 	}
 

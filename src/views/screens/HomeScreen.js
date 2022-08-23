@@ -174,7 +174,7 @@ const HomeScreen: () => Node = () => {
 				BackgroundFetch.finish(taskId);
 			}
 
-			let status = await BackgroundFetch.configure({minimumFetchInterval: FRECUENCY_HOURS * 60, stopOnTerminate: false, forceAlarmManager: true, enableHeadless: true}, onEvent, onTimeout);
+			let status = await BackgroundFetch.configure({minimumFetchInterval: FRECUENCY_HOURS * 60, stopOnTerminate: false, forceAlarmManager: false, enableHeadless: true}, onEvent, onTimeout);
 
 			if (status == 0) {
 				console.log("Restricted");
