@@ -74,9 +74,11 @@ const HomeScreen: () => Node = () => {
 			await BackgroundTasks.storePosition(
 				BackgroundTasks,
 				BackgroundTasks.updatePositions, 
-				BackgroundTasks.displayNotification, 
 				updateForeground
 			);
+			
+			//If this function is added to storePosition parameters, does not work in release mode
+			await BackgroundTasks.displayNotification();
 		} else {
 			await BackgroundTasks.updatePositions();
 			await BackgroundTasks.displayNotification();
@@ -151,9 +153,11 @@ const HomeScreen: () => Node = () => {
 		await BackgroundTasks.storePosition(
 			BackgroundTasks,
 			BackgroundTasks.updatePositions, 
-			BackgroundTasks.displayNotification, 
 			updateForeground
 		);
+		
+		//If this function is added to storePosition parameters, does not work in release mode
+		await BackgroundTasks.displayNotification();
 	}
 
 	// Background tasks

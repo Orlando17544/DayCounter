@@ -188,25 +188,31 @@ class BackgroundTasks {
 			sound: 'default', // Default sound for Android
 		});
 
-		// Display a notification
-		await notifee.displayNotification({
-			id: latest.countryCode,
-			title: '<p><b>¡Atención! Quedan ' + daysLeftYear + ' días para finalizar el año</b></p>',
-			body: bodyText,
-			android: {
-				channelId,
-				smallIcon: 'ic_small_icon', // optional, defaults to 'ic_launcher'.
-				color: '#df3500',
-				// pressAction is needed if you want the notification to open the app when pressed
-				pressAction: {
-					id: 'default',
+		try {		
+			// Display a notification
+			await notifee.displayNotification({
+				id: latest.countryCode,
+				title: '<p><b>¡Atención! Quedan ' + daysLeftYear + ' días para finalizar el año</b></p>',
+				body: bodyText,
+				android: {
+					channelId,
+					smallIcon: 'ic_small_icon', // optional, defaults to 'ic_launcher'.
+					color: '#df3500',
+					// pressAction is needed if you want the notification to open the app when pressed
+					pressAction: {
+						id: 'default',
+					},
+					style: { type: AndroidStyle.BIGTEXT, text: bodyText }
 				},
-				style: { type: AndroidStyle.BIGTEXT, text: bodyText }
-			},
-			ios: {
-				sound: 'default', // Default sound for iOS
-			},
-		});
+				ios: {
+					sound: 'default', // Default sound for iOS
+				},
+			});
+		} catch (e) {
+			this.executingDisplayNotification = false;
+			console.log(e);
+			return;
+		}
 
 		console.log('Id of notification: ' + latest.countryCode);
 
