@@ -49,10 +49,21 @@ class BackgroundTasks {
 			}
 		}
 
-		function getError(error) {
+		async function getError(error) {
 			this.executingStorePosition = false;
 			// See error code charts below.
 			console.log(error.code, error.message);
+			
+			//functions to execute after get the new position
+			if (arrayFn.length > 0) {
+				for (const fn of arrayFn) {
+					if (backgroundClass.hasOwnProperty(fn.name)) {
+						await fn.call(backgroundClass);
+					} else {
+						fn();
+					}
+				}
+			}
 		}
 
 		const getPositionBound = getPosition.bind(this);
