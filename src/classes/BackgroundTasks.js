@@ -1,3 +1,4 @@
+import { Platform } from 'react-native';
 import NetInfo from "@react-native-community/netinfo";
 import notifee, { EventType, AndroidStyle } from '@notifee/react-native';
 import Geolocation from 'react-native-geolocation-service';
@@ -160,6 +161,7 @@ class BackgroundTasks {
 		}
 
 		let bodyText = '';
+		let titleText = '<p><b>¡Atención! Quedan ' + daysLeftYear + ' días para finalizar el año</b></p>';
 
 		if (goals.length > 1) {
 			bodyText = '<p>Te falta pasar:';
@@ -178,6 +180,12 @@ class BackgroundTasks {
 			bodyText = '<p>No has establecido ningún objetivo</p>';
 		}
 
+		if (Platform.OS === 'ios') {
+			bodyText = bodyText.replaceAll(/<br>/g, ' ');
+			bodyText = bodyText.replaceAll(/<.+?>/g, '');
+			titleText = titleText.replaceAll(/<.+?>/g, '');
+		}
+
 		// Request permissions (required for iOS)
 		await notifee.requestPermission()
 
@@ -192,7 +200,7 @@ class BackgroundTasks {
 			// Display a notification
 			await notifee.displayNotification({
 				id: latest.countryCode,
-				title: '<p><b>¡Atención! Quedan ' + daysLeftYear + ' días para finalizar el año</b></p>',
+				title: titleText,
 				body: bodyText,
 				android: {
 					channelId,
