@@ -110,7 +110,9 @@ const HomeScreen: () => Node = () => {
 		return notifee.onForegroundEvent(({ type, detail }) => {
 			switch (type) {
 				case EventType.PRESS:
-					setUserData(JSON.parse(storageUser.getString(detail.notification.id)));
+					const userDataItem = JSON.parse(storageUser.getString(detail.notification.id));
+
+					setUserData({...userDataItem, days: Math.round(userDataItem.days)});
 			}
 		});
 	}, []);
@@ -144,7 +146,7 @@ const HomeScreen: () => Node = () => {
 	function updateForeground() {
 		const lastUserData = UserData.getLatest();
 
-		setUserData(lastUserData);
+		setUserData({...lastUserData, days: Math.round(lastUserData.days)});
 		load(lastUserData.days, lastUserData.maximumDays);
 	}
 
@@ -211,7 +213,12 @@ const HomeScreen: () => Node = () => {
 	};
 
 	const renderItem = ({ item }) => (
-		<TouchableOpacity key={item.code} style={{paddingBottom: 8}} onPress={() => {setUserData(JSON.parse(storageUser.getString(item.code))); setModalVisibleCountries(false); load(JSON.parse(storageUser.getString(item.code)).days, JSON.parse(storageUser.getString(item.code)).maximumDays);}}>
+		<TouchableOpacity key={item.code} style={{paddingBottom: 8}} onPress={() => {
+			const userDataItem = JSON.parse(storageUser.getString(item.code)); 
+			setUserData({...userDataItem, days: Math.round(userDataItem.days)});
+			setModalVisibleCountries(false); 
+			load(JSON.parse(storageUser.getString(item.code)).days, JSON.parse(storageUser.getString(item.code)).maximumDays);
+		}}>
 		<View style={{flexDirection: 'row', alignItems: 'center'}}>
 		<Image style={styles.flag} source={item.source}/>
 		<Text style={{color: '#2c2c2c', fontSize: 15, marginLeft: 15}}>{item.name}</Text>
@@ -262,7 +269,7 @@ const HomeScreen: () => Node = () => {
 			newMaximumDays = parseInt(newMaximumDays);
 
 			storageUser.set(userData.countryCode, JSON.stringify({...userData, maximumDays: newMaximumDays})); 
-			setUserData({...userData, maximumDays: newMaximumDays});
+			setUserData({...userData, days: Math.round(userData.days), maximumDays: newMaximumDays});
 			load(userData.days, newMaximumDays);
 		}}
 		keyboardType={'number-pad'}

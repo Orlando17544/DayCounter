@@ -161,21 +161,21 @@ class BackgroundTasks {
 		}
 
 		let bodyText = '';
-		let titleText = '<p><b>¡Atención! Quedan ' + daysLeftYear + ' días para finalizar el año</b></p>';
+		let titleText = '<p><b>¡Atención! Quedan ' + Math.round(daysLeftYear) + ' días para finalizar el año</b></p>';
 
 		if (goals.length > 1) {
 			bodyText = '<p>Te falta pasar:';
 
 			goals.forEach(goal => {
 				const daysLeft = goal.maximumDays - goal.days;
-				bodyText = bodyText + '<br>' + '- ' + daysLeft + ' días en ' + Countries.getName(goal.countryCode);
+				bodyText = bodyText + '<br>' + '- ' + Math.round(daysLeft) + ' días en ' + Countries.getName(goal.countryCode);
 			});
 
 			bodyText = bodyText + '</p>';
 
 		} else if (goals.length == 1) {
 			const daysLeft = goals[0].maximumDays - goals[0].days;
-			bodyText = '<p>Te falta pasar ' + daysLeft + ' días en ' + Countries.getName(goals[0].countryCode) + '</p>';
+			bodyText = '<p>Te falta pasar ' + Math.round(daysLeft) + ' días en ' + Countries.getName(goals[0].countryCode) + '</p>';
 		} else if (goals.length == 0) {
 			bodyText = '<p>No has establecido ningún objetivo</p>';
 		}
