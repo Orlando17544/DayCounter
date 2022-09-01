@@ -43,7 +43,11 @@ import Countries from './../../classes/Countries.js';
 import UserData from './../../classes/UserData.js';
 
 const HomeScreen: () => Node = () => {
-	const [userData, setUserData] = useState(JSON.parse(storageUser.getString('AFG')));
+	const [userData, setUserData] = useState(() => {
+		const latest = UserData.getLatest();
+
+		return {...latest, days: Math.round(latest.days)};
+	});
 	const [modalVisibleCountries, setModalVisibleCountries] = useState(false);
 
 	let timeoutId;
@@ -128,8 +132,12 @@ const HomeScreen: () => Node = () => {
 				if (storageNotifications.contains('notification')) {
 					const countryCodeNotification = storageNotifications.getString('notification');
 					const userDataItem = JSON.parse(storageUser.getString(countryCodeNotification));
-					setUserData(userDataItem);
+					setUserData({...userDataItem, days: Math.round(userDataItem.days)});
 					storageNotifications.delete('notification');	
+				} else {
+					const latest = UserData.getLatest();
+
+					setUserData({...latest, days: Math.round(latest.days)});
 				}
 			}
 
