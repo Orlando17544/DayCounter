@@ -7,11 +7,11 @@
 #define TIMEOUT_SECONDS 600
 #define TEXT_TO_LOOK_FOR @"Welcome to React"
 
-@interface DayCounterTests : XCTestCase
+@interface FiscalLocatorTests : XCTestCase
 
 @end
 
-@implementation DayCounterTests
+@implementation FiscalLocatorTests
 
 - (BOOL)findSubviewInView:(UIView *)view matching:(BOOL (^)(UIView *view))test
 {
