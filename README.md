@@ -67,4 +67,4 @@ npx react-native run-ios
 
 ## Preview
 
-<img src="https://github.com/Orlando17544/Portfolio/blob/main/src/assets/tourismApp.gif" alt="Simplefolio" width="900px" />
+<img src="https://raw.githubusercontent.com/Orlando17544/Portfolio/main/src/assets/dayCounter.gif" alt="Simplefolio" width="900px" />
