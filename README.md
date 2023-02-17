@@ -26,6 +26,7 @@ Create an application to count the number of days a user spent in a country. The
 - Axios
 - React Native MMKV
 - Notifee
+- React Native Backround Fetch
 
 ## Install
 
