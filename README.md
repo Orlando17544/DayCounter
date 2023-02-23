@@ -23,10 +23,15 @@ Create an application to count the number of days a user spent in a country. The
 - React: 18.0.0
 - React Native: 0.69.1
 - Javascript
-- Axios
-- React Native MMKV
-- Notifee
-- React Native Backround Fetch
+- Axios: 0.27.2
+- React Native MMKV: 2.4.3
+- Notifee: 5.5.0
+- React Native Backround Fetch: 4.1.2
+
+## Tools used
+- Vim 8.2.4174
+- GitHub 
+- Git 2.30.2
 
 ## Install
 
